@@ -1,0 +1,14 @@
+table
+  thead
+    tr
+      th name
+      th port
+      th status
+      th actions
+  tbody
+    - each app in applist
+      tr
+        td #{app.name}
+        td #{app.port}
+        td #{app.running}
+        td action

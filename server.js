@@ -2,7 +2,8 @@ var express = require('express'),
 		cauth= require('connect-auth'),
 		auth = require('./lib/auth'),
 		encode = require('./lib/encoding')
-		nodester = require('./lib/nodester-api');
+		nodester = require('./lib/nodester-api'),
+		jade = require('jade');
 
 var app = module.exports = express.createServer();
 
@@ -32,18 +33,22 @@ var static_routing = express.static(__dirname + '/public',{ maxAge: "6000000" })
 // Checks whether user has logged in
 // No data store used, just plain cookie based auth
 function checkAuth(req,res,next) {
-	req.is_logged = false;
+	req.is_logged = true;
 	// if key=>cred is present in session
 	// then user is logged in
 	// after verification frm nodester
-	if(req.session && req.session.cred) {
-		// get from session
-		console.log('logged in');
-		req.user = req.session.cred;
-		req.is_logged = true;
-	} else {
-		console.log('not logged in');
-	}
+  // if(req.session && req.session.cred) {
+  //  // get from session
+  //  console.log('logged in');
+  //  req.user = req.session.cred;
+  //  req.is_logged = true;
+  // } else {
+  //  console.log('not logged in');
+  // }
+  req.user = {
+	  creds:encode.base64("rowoot:hackerro"),
+	  user: "mike"
+  }
 	next();
 }
 
@@ -127,14 +132,36 @@ app.all("/api/*", checkAuth, function(req, res, next){
   	}
   	// method, api path, data, credentials, callback
   	nodester.request(req.method, req.params[0], params, req.user.creds,function(response) {
-  		res.header('Content-Type', 'application/json');
-  		res.end(response);
+  	  handleRoutes(req,res,next,JSON.parse(response), function(r) {
+  	    res.header('Content-Type', 'application/json');
+    		res.end(r);
+  	  });
   	});
   } else {
     res.send('Please Login', { 'Content-Type': 'text/plain' }, 401);
   }
 	
 });
+
+function handleRoutes(req,res,next,response, callback) {
+  console.log("incoming route ===> " + req.params[0]);
+  switch(req.params[0]) {
+    case 'apps':
+      jade.renderFile(__dirname + '/views/app/index.jade', {
+        locals: {
+          title: "Nodester Admin Panel",
+        	is_logged: req.is_logged,
+        	user: req.user.user,
+        	applist: response
+      	}
+      }, function(err, html){
+        console.log("err ==> ",err);
+        console.log("html ==> ",html);
+    	  callback(html);
+      });
+    break;
+  }
+}
 
 // Routes
 // All routes
