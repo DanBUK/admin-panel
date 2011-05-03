@@ -23,27 +23,7 @@ Array.prototype.clean = function(deleteValue) {
 	$(document).ready(function() {
 	  // cache some doms
 	  var $loader = $("#loader"),
-	      $tree = $(".tree"),
-	      template = {
-	        apps: {
-			      body:["<td class='name'>{{name}}</td>",
-                  "<td class='port'>{{port}}</td>",
-  		            "<td class='status'>{{running}}</td>",
-  		            "<td class='actions'>{{actions}}</td>"].join(""),
-  		      header: ["<th>name</th>",
-  		               "<th>port</th>",
-  		               "<th>app-status</th>",
-  		               "<th>action</th>"].join("")
-			    },
-			    appdomains: {
-			      body:["<td class='domain'>{{domain}}</td>",
-                  "<td class='appname'>{{appname}}</td>",
-                  "<td class='actions'>{{actions}}</td>"].join(""),
-  		      header: ["<th>domain</th>",
-  		               "<th>appname</th>",
-  		               "<th>action</th>"].join("")
-			    }
-	      };
+	      $tree = $(".tree");
         
 	  // Main Links
 	  // Apps List
@@ -67,7 +47,7 @@ Array.prototype.clean = function(deleteValue) {
 			  $loader.fadeIn('fast');
 			});
 			
-			ajaxHelpers.main({curr_page:curr_page,template:template[curr_page.path]}, function(template) {
+			AjaxHelpers.main(curr_page, function(template) {
   			// hide loader, but show table
   			$loader.fadeOut('fast', function() {
   			  $tree.html(template).fadeIn("fast");
@@ -98,8 +78,8 @@ Array.prototype.clean = function(deleteValue) {
 	  var $this = $(this),
 	      href = $this.attr("href"),
 	      thisHtml = $this.html(),
-	      $allRels = $("a[rel='put']"),
-	      data = JSON.parse($this.attr("data-params"));
+	      $allRels = $("a[rel='put']");
+	      
 	  // remove put from rel --- temporary
 	  $allRels.attr("rel", "");
 	  $this.html(Helper.inlineLoader($this));
@@ -107,7 +87,7 @@ Array.prototype.clean = function(deleteValue) {
 	  $.ajax({
 	    url:"/api" + href,
 	    type:"PUT",
-	    data:data,
+	    data:$this.attr("data-params"),
 	    success:function(r) {
 	      if(r.status == "success") {
   	      // since href can be /apps or /appdomains
@@ -283,86 +263,60 @@ Array.prototype.clean = function(deleteValue) {
 	});
 	
 	
-	var ajaxHelpers = {
+	/**
+   * AjaxHelpers class here
+   * @class
+   */
+	var AjaxHelpers = {
 	  /**
-	   * Ajax helpers for main
-	   * <b>Expects</b>
-	   * * curr_page (String) - {uri:"",path:""}
-	   * * props (Array) - props for particular api end point
-	   * <b>Returns<?b>
-	   * callback (template)
-	   *
-	  **/
-	  main: function(params,callback) {
-	    var req_vars = params;
+     * Returns template of main links i.e Apps | Domains
+     * @function
+     * @param page {object} uri of the link to query from
+     * @returns {callback} callback with template
+     * @lends AjaxHelpers#
+     */
+	  main: function(page,callback) {
 	    // to get the apps|domains list pages
 			$.ajax({
-				url:"/api" + req_vars.curr_page.uri,
+				url:"/api" + page.uri,
 				success:function(r) {
 				  // if r.status (for errors)
 				  // if r.length (if not array or == 0)
-				  if(r.status || r.length == 0) {
+				  if(r.status == 0) {
 				    callback("err");
 				    return;  // get out
 			    }
-				  // init vars
-					var keys = Helper.getKeys(r[0]),
-					    len = keys.length;
-				  // check curr_page
-				  if(req_vars.curr_page) {
-				    switch(req_vars.curr_page.path) {
-				      case "apps":
-				      // define params to be sent in the request
-				      // append the params in the data-params
-				      var start_action = JSON.stringify({
-				        appname: "{{name}}",
-				        running: true
-				      }),
-				      stop_action = JSON.stringify({
-				        appname: "{{name}}",
-				        running: false
-				      });
-				      // actions template
-				      var actions_template = [
-  				      "<a href='/app' data-params='" + start_action + "' rel='put'>start</a>",
-  				      "<a href='/app' data-params='" + stop_action + "' rel='put'>stop</a>",
-  				      "<a href='/app/{{name}}' data-params='{{name}}' class='app_info' rel='modal'>info</a>"
-				      ].join(" ");
-				      req_vars.template.body = req_vars.template.body.replace("{{actions}}",actions_template);
-				      break;
-				      // Actions for app domains
-				      case "appdomains":
-				      // define params to be sent in the request
-				      // append the params in the data-params
-				      var domain = JSON.stringify({
-				        appname : "{{appname}}",
-				        domain: "{{domain}}"
-				      });
-				      req_vars.template.body = req_vars.template.body.replace("{{actions}}","<a href='/appdomains' data-params='" + domain + "' rel='delete'>delete</a>");
-				      break;
-				    }
-				  }
 				  // callback with the template
-				  callback(["<thead><tr>",
-				          req_vars.template.header,
-				          "</tr></thead>",
-				          "<tbody>", 
-				          Mustache.to_html("{{#items}}<tr>" + req_vars.template.body + "</tr>{{/items}}", {items:r}),
-				          "</tbody>"].join(""));
-				              
+				  callback(r.template);
 				} // end success of ajax
 			}); // end ajax
 	  }
 	}
 	
-	// Helper Methods
+  /**
+   * AjaxHelpers class here
+   * @class
+   */
 	var Helper = {
-    // Gets URI Path
+	  /**
+     * Returns path from uri
+     * @function
+     * @param uri {string} entire uri
+     * @returns {string} last path from the uri
+     * @lends Helper#
+     */
     getPath: function(uri) {
       var temp = uri.split("/").clean("");
       return temp[temp.length-1];
     },
-    // get keys of object
+    
+    /**
+     * Returns keys of Object
+     * @function
+     * @param obj {object} Javascript Object
+     * @returns {array} keys of all the object
+     * @lends Helper#
+     */
     getKeys: function(obj) {
   	  var keys = [];
       for(var key in obj) {
@@ -370,7 +324,14 @@ Array.prototype.clean = function(deleteValue) {
       }
       return keys;      
     },
-    // return inline loader
+    
+    /**
+     * Returns inline loader
+     * @function
+     * @param $dom {jQuery} jQuery DOM
+     * @returns {string} loader template
+     * @lends Helper#
+     */
     inlineLoader: function($dom) {
       return "<span style='width:" + $dom.width()+ "px; display:inline-block'><img src='/static/i/loader-small.gif' /></span>"
     }

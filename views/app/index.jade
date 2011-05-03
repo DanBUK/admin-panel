@@ -1,14 +1,18 @@
 table
   thead
     tr
-      th name
+      th app name
       th port
-      th status
+      th app status
       th actions
   tbody
     - each app in applist
-      tr
+      - var appStatus = app.running == "true";
+      - var appParams = "appname=" + app.name + "&running=" + (appStatus ? "false" : "true");
+      tr(class:(appStatus ? "app_running" : "app_stopped"))
         td #{app.name}
         td #{app.port}
-        td #{app.running}
-        td action
+        td #{appStatus ? "running" : "stopped"}
+        td
+          a(href:"/app","data-params":appParams,rel:"put")
+            = appStatus ? "stop" : "start"
