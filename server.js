@@ -155,10 +155,9 @@ app.get("*", checkAuth, function(req, res){
       params = req.body;
     }
     
-    console.log("req params ... ", req.params[0]);
     // fix...
-    req.params[0] = req.params[0].replace(/^\//,"");
-    var route = req.params[0].split("/");
+    req.params[0] = req.params[0].replace(/^\//,"").replace(/\/$/,"");
+    var route = req.params[0];
     console.log("routes ... ", route);
     // default options
     var options = {
@@ -177,7 +176,7 @@ app.get("*", checkAuth, function(req, res){
     }
     
     // use switch case to decide template, other options
-    switch(route[0]) {
+    switch(route) {
       case 'apps':
         callNodesterApi(function(response) {
           options["template"] = "app/index";
@@ -194,6 +193,11 @@ app.get("*", checkAuth, function(req, res){
           options["options"]["domainlist"] = JSON.parse(response);
           render();
         });
+      break;
+      
+      case 'app/new':
+        options["template"] = "app/new";
+        render();
       break;
       
       default:

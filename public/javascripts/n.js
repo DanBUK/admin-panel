@@ -12,7 +12,6 @@ Array.prototype.clean = function(deleteValue) {
   var curr_page = null;
   
   window.onpopstate = function(e) { 
-    console.log(e);
     if(e.state == undefined)
       return false;
     $("a[href='"+ e.state.uri +"']").trigger('click');
@@ -199,86 +198,45 @@ Array.prototype.clean = function(deleteValue) {
 	// Methods
 	// SHow Information about APP
 	$("a[rel='modal']").live("click", function(e) {
+	  var $modal = $("#modal");
 	  e.preventDefault();
-	  var $this = $(this),
-	      thisHtml = $this.html(),
-	      href = $this.attr("href"),
-	      $modal = $("#modal"),
-	      modal_template = {
-	        app_info : ["<h2>About <strong>" + appname + "</strong></h2>",
-  	                  "<table cellpadding=0 cellspacing=0 class='table'>",
-  	                  "<tr><td class='label'>port</td><td>{{port}}</td></tr>",
-  	                  "<tr><td class='label'>gitrepo</td><td>{{gitrepo}}</td></tr>",
-  	                  "<tr><td class='label'>start file</td><td>{{start}}</td></tr>",
-  	                  "<tr><td class='label'>app status</td><td>{{running}}</td></tr>",
-  	                  "<tr><td class='label'>process id</td><td>{{pid}}</td></tr>",
-  	                  "</table>",
-  	                  "<p><a href='/app' data-params='" + JSON.stringify({appname: appname}) + "' class='submit r5 redgrad no_u' rel='delete'>Destroy</a></p>"].join(""),
-  	      app_create : ["<h2>Create new app</h2>",
-  	                    "<form method='post' action='/app' class='form'>",
-                	      "<table cellpadding=0 cellspacing=0 class='table'>",
-                        "<tr><td class='form_label'>app name</td>",
-                        "<td><input class='input r5' name='params_appname' id='params_appname' /></td></tr>",
-                        "<tr><td class='form_label'>start file<br /></td>",
-                        "<td><input class='input r5' name='params_start' id='params_start' /></td></tr>",
-  	                    "</table>",
-  	                    "<input type='submit' class='submit r5 bluegrad' value='Create' />",
-  	                    '<p id="failed" class="msg r5" style="display:none; margin-top:10px" ></p>',  	                    
-  	                    "</form>"].join("")
-	      },
-	      modal_type = $this.attr("class");
-	      
-	  // to render forms    
-	  if(modal_type == "app_create") {
-	    $modal.modal({content: modal_template.app_create, onOpen: function() {
-	      // bind the create app form
-	      $modal.find(".form").submit(function(e) {
-	        var $this = $(this),// form obj
-	            href = $this.attr("action"),
-	            $err = $this.find("#failed"); 
-	        // hide error box
-	        $err.hide();
-	        $.ajax({
-	          url: "/api" + href,
-	          type:"post",
-	          data: {appname:$("#params_appname").val(), start:$("#params_start").val()},
-	          success: function(r) {
-	            if(r.status && r.status == "success") {
-	              $("a[href='/apps']").trigger("click"); // refresh app list
-	              $modal.find(".close").trigger("click"); // close modal box
-              } else {
-                $this.find(".input").addClass("error"); // add error class to text
-                $err.html(r.message).show(); // show error
-              }
-	          }          
-	        })
-	        e.preventDefault;
-	        return false;
-	      });
-      }
-	    }); 
-	    return;
-	  }
-    // remove put from rel --- temporary
-	  $this.attr("rel", "");
-	  // show Loader on the spot
-	  $this.html(Helper.inlineLoader($this));
+	  
+	  
 	  $.ajax({
-	    url:"/api" + href,
-	    success:function(r) {
-	      if(r.status == "success") {
-	        $modal.modal({content: Mustache.to_html(modal_template[modal_type],r)}); 
-	      } else {
-	        // error
-	      }
-	    },
-	    // on ajax complete, instill put agin
-	    complete:function() {
-	      $this.attr("rel", "modal");
-	      $this.html(thisHtml);
-	    }
-	  })
-	  return false;
+      url: "/app/new",
+      success: function(r) {
+        if(r.status == 1)
+          $modal.modal({content: r.template, onOpen: function() {
+    	      // bind the create app form
+    	      $modal.find(".form").submit(function(e) {
+    	        var $this = $(this),// form obj
+    	            href = $this.attr("action"),
+    	            $err = $this.find("#failed"); 
+    	        // hide error box
+    	        $err.hide();
+    	        $.ajax({
+    	          url: "/api/app",
+    	          type:"post",
+    	          data: {appname:$("#params_appname").val(), start:$("#params_start").val()},
+    	          success: function(r) {
+    	            if(r.status && r.status == "success") {
+    	              $("a[href='/apps']").trigger("click"); // refresh app list
+    	              $modal.find(".close").trigger("click"); // close modal box
+                  } else {
+                    $this.find(".input").addClass("error"); // add error class to text
+                    $err.html(r.message).show(); // show error
+                  }
+    	          }          
+    	        })
+    	        e.preventDefault;
+    	        return false;
+    	      }); //end form
+          }
+    	    }); //end onOpen
+      }          
+    });
+    
+    return false;
 	});
 	
 	
