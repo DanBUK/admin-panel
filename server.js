@@ -37,20 +37,17 @@ function checkAuth(req,res,next) {
   // if key=>cred is present in session
   // then user is logged in
   // after verification frm nodester
-  // if(req.session && req.session.cred) {
-  // // get from session
-  // console.log('logged in');
-  // req.user = req.session.cred;
-  // req.is_logged = true;
-  // } else {
-    // console.log('not logged in');
-    // }
-    req.user = {
-      creds:encode.base64("rowoot:hackerro"),
-      user: "mike"
-    }
-    next();
+  if(req.session && req.session.cred) {
+    // get from session
+    console.log('logged in');
+    req.user = req.session.cred;
+    req.is_logged = true;
+  } else {
+    console.log('not logged in');
   }
+
+  next();
+}
 
 app.get("/static/*", function (req, res, next) {
   req.url = req.params[0];
