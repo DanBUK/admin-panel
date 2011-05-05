@@ -9,11 +9,10 @@ Array.prototype.clean = function(deleteValue) {
 };
 
 (function($) {
-  var curr_page = null,
-      curr_path = window.location.pathname,
-      exclude_keys = ["gitrepo"];
+  var curr_page = null;
   
   window.onpopstate = function(e) { 
+    console.log(e);
     if(e.state == undefined)
       return false;
     $("a[href='"+ e.state.uri +"']").trigger('click');
@@ -23,13 +22,13 @@ Array.prototype.clean = function(deleteValue) {
 	$(document).ready(function() {
 	  // cache some doms
 	  var $loader = $("#loader"),
-	      $tree = $(".tree");
-        
+	      $content_area = $("#content_area");
 	  // Main Links
 	  // Apps List
 	  // AppDomain List
-		$("a[rel='main']").click(function(e) {
-			e.preventDefault(); // prevent defailt
+		$("a[rel='ajaxify_menu']").click(function(e) {
+		  // show loader first
+			e.preventDefault(); // prevent default
 			// init vars
 			var $this = $(this),
 			    href = $this.attr("href"), // get href from a
@@ -38,11 +37,12 @@ Array.prototype.clean = function(deleteValue) {
 			//remove active class
 			$(".lnav .active").removeClass("active"); 
 			// push state of page
+			// NOTE : have to remove this for back button
 			history.pushState(curr_page, null, curr_page.uri);
 			// add active class
 			$this.parent().addClass("active"); 
 			// fadeout tree
-			$tree.fadeOut('fast', function() {
+			$content_area.fadeOut('fast', function() {
 			  // show loader
 			  $loader.fadeIn('fast');
 			});
@@ -50,7 +50,7 @@ Array.prototype.clean = function(deleteValue) {
 			AjaxHelpers.main(curr_page, function(template) {
   			// hide loader, but show table
   			$loader.fadeOut('fast', function() {
-  			  $tree.html(template).fadeIn("fast");
+  			  $content_area.html(template).fadeIn("fast");
   			}); // hide loader
 			});
 			
@@ -58,10 +58,8 @@ Array.prototype.clean = function(deleteValue) {
 		}); // end onclick
 		
 		// default view to be loaded
-		if( curr_path == "/")
-		  $("#my_apps").trigger('click');
-		else
-		  $("a[href='"+curr_path+"']").trigger('click');
+		if(window.location.pathname == "/")
+      $("a[href='/apps']").trigger('click');
 		  
 	}); // end doc ready
 	
@@ -77,11 +75,11 @@ Array.prototype.clean = function(deleteValue) {
 	  e.preventDefault();
 	  var $this = $(this),
 	      href = $this.attr("href"),
-	      thisHtml = $this.html(),
+	      actionText = $this.text(),
 	      $allRels = $("a[rel='put']");
 	      
 	  // remove put from rel --- temporary
-	  $allRels.attr("rel", "");
+	  $allRels.removeAttr("rel");
 	  $this.html(Helper.inlineLoader($this));
 	  // send ajax request
 	  $.ajax({
@@ -90,13 +88,35 @@ Array.prototype.clean = function(deleteValue) {
 	    data:$this.attr("data-params"),
 	    success:function(r) {
 	      if(r.status == "success") {
+	        // if restart was clicked
+	        if(actionText == "restart") return;
+	        
   	      // since href can be /apps or /appdomains
   	      switch(href.split("/")[1]) {
   	        case 'app':
-  	          var $tRow = $this.parent().parent();
-  	          $tRow.find(".status").text(r.running); // change running
+  	          var $tRow = $this.parent().parent().parent(),
+  	              opts = {},
+  	              appname = $tRow.find(".appname").text();
+  	          
+  	          if(r.running == "true")
+  	            opts = {
+  	              "statusText" : "running",
+  	              "action" : "stop",
+  	              "data-params" : "appname=" + appname +"&running=false"
+  	            }
+  	          else
+  	            opts = {
+  	              "statusText" : "stopped",
+  	              "action" : "start",
+  	              "data-params" : "appname=" + appname +"&running=true" 
+  	            }
+  	          $tRow.find(".status").html(opts["statusText"]); // change status in table
+  	          // change data-params
+  	          $this.attr("data-params", opts['data-params']);
+  	          // change clicked event name
+  	          actionText = opts.action;
   	        break;
-  	        case 'appdomains':
+  	        case 'user':
 	        
   	        break;
   	      }
@@ -107,7 +127,7 @@ Array.prototype.clean = function(deleteValue) {
 	    // on ajax complete, instill put agin
 	    complete:function() {
 	      $allRels.attr("rel", "put");
-	      $this.html(thisHtml);
+	      $this.html(actionText);
 	    }
 	  })
 	  return false;
@@ -184,7 +204,6 @@ Array.prototype.clean = function(deleteValue) {
 	      thisHtml = $this.html(),
 	      href = $this.attr("href"),
 	      $modal = $("#modal"),
-	      appname = $this.attr("data-params"),
 	      modal_template = {
 	        app_info : ["<h2>About <strong>" + appname + "</strong></h2>",
   	                  "<table cellpadding=0 cellspacing=0 class='table'>",
@@ -278,7 +297,7 @@ Array.prototype.clean = function(deleteValue) {
 	  main: function(page,callback) {
 	    // to get the apps|domains list pages
 			$.ajax({
-				url:"/api" + page.uri,
+				url: page.uri,
 				success:function(r) {
 				  // if r.status (for errors)
 				  // if r.length (if not array or == 0)

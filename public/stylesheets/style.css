@@ -219,6 +219,11 @@ p#incomplete {
   text-align:center;
 }
 
+.action span {
+  display:inline-block;
+  margin:0 5px;
+}
+
 footer {
   margin-top:2em;
   font-size:12px;
@@ -298,4 +303,8 @@ footer p {
 
 .no_u {
   text-decoration:none;
+}
+
+#loader {
+  display:none;
 }

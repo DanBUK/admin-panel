@@ -29,7 +29,10 @@ html
         .sidebar.fl
           != partial("sidebar")
       .content.fl
-        != body
+        #loader
+          img(src:"/static/i/loader.gif")
+        #content_area
+          != body
       .cl
     footer
       p <strong>NOTE</strong>: <br /> This project is work in progress, <br /> kindly file issues/pull requests to 
