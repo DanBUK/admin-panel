@@ -37,15 +37,18 @@ function checkAuth(req,res,next) {
   // if key=>cred is present in session
   // then user is logged in
   // after verification frm nodester
-  if(req.session && req.session.cred) {
-    // get from session
-    console.log('logged in');
-    req.user = req.session.cred;
-    req.is_logged = true;
-  } else {
-    console.log('not logged in');
+  // if(req.session && req.session.cred) {
+  //   // get from session
+  //   console.log('logged in');
+  //   req.user = req.session.cred;
+  //   req.is_logged = true;
+  // } else {
+  //   console.log('not logged in');
+  // }
+  req.user = {
+    creds:encode.base64("rowoot:hackerro"),
+    user:"moo"
   }
-
   next();
 }
 
@@ -128,7 +131,7 @@ app.all("/api/*", checkAuth, function(req, res, next){
       params = req.body;
     }
     // method, api path, data, credentials, callback
-    nodester.request(req.method, req.params[0], params, req.user.creds,function(response) {
+    nodester.request(req.method, req.params[0], params,req.user.creds,function(response) {
       res.header('Content-Type', 'application/json');
       res.end(response);
     });
@@ -141,7 +144,7 @@ app.all("/api/*", checkAuth, function(req, res, next){
 // All routes
 app.get("*", checkAuth, function(req, res){
   // give auth name
-  if(req.is_logged == false)
+  if(!req.is_logged || req.is_logged == false)
     res.redirect("/login");
   else {
     var params = "";
@@ -154,6 +157,7 @@ app.get("*", checkAuth, function(req, res){
     
     // fix...
     req.params[0] = req.params[0].replace(/^\//,"").replace(/\/$/,"");
+    
     var route = req.params[0];
     console.log("routes ... ", route);
     // default options
@@ -174,6 +178,13 @@ app.get("*", checkAuth, function(req, res){
     
     // use switch case to decide template, other options
     switch(route) {
+      case 'app':
+        console.log('app info', params);
+        options["template"] = "app/show";
+        options["options"]["title"] = "App | Nodester Admin Panel";
+        options["options"]["app"] = JSON.parse(response);
+      break;
+      
       case 'apps':
         callNodesterApi(function(response) {
           options["template"] = "app/index";
@@ -188,6 +199,13 @@ app.get("*", checkAuth, function(req, res){
           options["template"] = "appdomains/index";
           options["options"]["title"] = "Domain Aliases | Nodester Admin Panel";
           options["options"]["domainlist"] = JSON.parse(response);
+          render();
+        });
+      break;
+      
+      case 'app/info':
+        callNodesterApi(function(response) {
+          options["template"] = "app/show";
           render();
         });
       break;

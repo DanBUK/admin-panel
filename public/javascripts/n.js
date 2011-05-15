@@ -198,42 +198,57 @@ Array.prototype.clean = function(deleteValue) {
 	// Methods
 	// SHow Information about APP
 	$("a[rel='modal']").live("click", function(e) {
-	  var $modal = $("#modal");
+	  var $modal = $("#modal"),
+	      $this = $(this),
+	      href = $this.attr("href"),
+	      modal_type = $this.attr("class");
+	  // prevent default
 	  e.preventDefault();
-	  
-	  
+	  // send ajax
 	  $.ajax({
-      url: "/app/new",
+      url: href,
       success: function(r) {
-        if(r.status == 1)
-          $modal.modal({content: r.template, onOpen: function() {
-    	      // bind the create app form
-    	      $modal.find(".form").submit(function(e) {
-    	        var $this = $(this),// form obj
-    	            href = $this.attr("action"),
-    	            $err = $this.find("#failed"); 
-    	        // hide error box
-    	        $err.hide();
-    	        $.ajax({
-    	          url: "/api/app",
-    	          type:"post",
-    	          data: {appname:$("#params_appname").val(), start:$("#params_start").val()},
-    	          success: function(r) {
-    	            if(r.status && r.status == "success") {
-    	              $("a[href='/apps']").trigger("click"); // refresh app list
-    	              $modal.find(".close").trigger("click"); // close modal box
-                  } else {
-                    $this.find(".input").addClass("error"); // add error class to text
-                    $err.html(r.message).show(); // show error
-                  }
-    	          }          
-    	        })
-    	        e.preventDefault;
-    	        return false;
-    	      }); //end form
-          }
-    	    }); //end onOpen
-      }          
+        if(r.status == 1) {
+          $modal.modal(
+            {content: r.template, 
+              onOpen: function() {
+                switch(modal_type) {
+            	    case 'info':
+            	      
+            	    break;
+
+            	    case 'app-create':
+            	    // form
+            	      // bind the create app form
+            	      $modal.find(".form").submit(function(e) {
+            	        var $this = $(this),// form obj
+            	            href = $this.attr("action"),
+            	            $err = $this.find("#failed"); 
+            	        // hide error box
+            	        $err.hide();
+            	        $.ajax({
+            	          url: "/api/app",
+            	          type:"post",
+            	          data: {appname:$("#params_appname").val(), start:$("#params_start").val()},
+            	          success: function(r) {
+            	            if(r.status && r.status == "success") {
+            	              $("a[href='/apps']").trigger("click"); // refresh app list
+            	              $modal.find(".close").trigger("click"); // close modal box
+                          } else {
+                            $this.find(".input").addClass("error"); // add error class to text
+                            $err.html(r.message).show(); // show error
+                          }
+            	          }          
+            	        });
+            	        e.preventDefault;
+            	        return false;
+            	      }); //end form
+                  break;
+                } // switch
+              } // onopen
+    	    }); //end modal
+  	    }
+      }
     });
     
     return false;
