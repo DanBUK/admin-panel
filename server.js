@@ -144,7 +144,7 @@ app.get("*", checkAuth, function(req, res){
 		res.redirect("/login");
 	else {
 		res.render('index', {
-    	title: "Nodester Admin Panel",
+    	title: "Nodester Admin Panel - Makis Tracend Mod",
     	is_logged: req.is_logged,
     	user: req.user.user
   	});
@@ -153,6 +153,6 @@ app.get("*", checkAuth, function(req, res){
 
 // Only listen on $ node app.js
 if (!module.parent) {
-  app.listen(9651);
+  app.listen(10048);
   console.log("Express server listening on port %d", app.address().port);
 }
