@@ -1,10 +1,10 @@
 {
-  "author": "rowoot",
-  "name": "nodester_admin",
+  "author": "makesites",
+  "name": "admin-tracend",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "ec2-user@nodester.com:/node/hosted_apps/rowoot/1498-460f957a53eb6348b7077e2289eb7868.git"
+    "url": "ec2-user@nodester.com:/node/hosted_apps/makesites/1895-b0d5fb1d1b28dcede5f4221233be21b0.git"
   },
   "main": "server.js",
   "directories": {
