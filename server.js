@@ -1,8 +1,9 @@
 var express = require('express'),
-    cauth= require('connect-auth'),
-    auth = require('./lib/auth'),
-    encode = require('./lib/encoding')
-    nodester = require('./lib/nodester-api');
+cauth= require('connect-auth'),
+auth = require('./lib/auth'),
+encode = require('./lib/encoding')
+nodester = require('./lib/nodester-api'),
+jade = require('jade');
 
 var app = module.exports = express.createServer();
 
@@ -133,7 +134,6 @@ app.all("/api/*", checkAuth, function(req, res, next){
   } else {
     res.send('Please Login', { 'Content-Type': 'text/plain' }, 401);
   }
-
 });
 
 // Routes
@@ -141,13 +141,81 @@ app.all("/api/*", checkAuth, function(req, res, next){
 app.get("*", checkAuth, function(req, res){
   // give auth name
   if(req.is_logged == false)
-  res.redirect("/login");
+    res.redirect("/login");
   else {
-    res.render('index', {
-      title: "Nodester Admin Panel",
-      is_logged: req.is_logged,
-      user: req.user.user
-    });
+    var params = "";
+    // based on verb, get params
+    if(req.method == "GET") {
+      params = req.query;
+    } else {
+      params = req.body;
+    }
+    
+    // fix...
+    req.params[0] = req.params[0].replace(/^\//,"").replace(/\/$/,"");
+    var route = req.params[0];
+    console.log("routes ... ", route);
+    // default options
+    var options = {
+      options: {
+        is_logged: req.is_logged,
+        user: req.user.user
+      }
+    };
+    
+    function callNodesterApi(callback) {
+      nodester.request(req.method, req.params[0], params, req.user.creds,function(response) {
+        if(typeof(callback) == 'function') {
+          callback(response);
+        }
+      });
+    }
+    
+    // use switch case to decide template, other options
+    switch(route) {
+      case 'apps':
+        callNodesterApi(function(response) {
+          options["template"] = "app/index";
+          options["options"]["title"] = "All Apps | Nodester Admin Panel";
+          options["options"]["applist"] = JSON.parse(response);
+          render();
+        });
+      break;
+      
+      case 'appdomains':
+        callNodesterApi(function(response) {
+          options["template"] = "appdomains/index";
+          options["options"]["title"] = "Domain Aliases | Nodester Admin Panel";
+          options["options"]["domainlist"] = JSON.parse(response);
+          render();
+        });
+      break;
+      
+      case 'app/new':
+        options["template"] = "app/new";
+        render();
+      break;
+      
+      default:
+        options["template"] = "index";
+        options["options"]["title"] = "Nodester Admin Panel";
+        render();
+      break;
+    }
+    
+    function render() {
+      // if request is xhr
+      if(req.xhr) {
+        options.options["layout"] = false;
+        res.render(options.template, options.options, function(err, html) {
+          res.header('Content-Type', 'application/json');
+          res.end(JSON.stringify({status:(err ? 0 : 1),template:html}));
+        });
+      } else {
+        // render template
+        res.render(options.template, options.options);
+      }
+    }
   }
 });
 

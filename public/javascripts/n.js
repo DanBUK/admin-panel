@@ -9,9 +9,7 @@ Array.prototype.clean = function(deleteValue) {
 };
 
 (function($) {
-  var curr_page = null,
-      curr_path = window.location.pathname,
-      exclude_keys = ["gitrepo"];
+  var curr_page = null;
   
   window.onpopstate = function(e) { 
     if(e.state == undefined)
@@ -23,33 +21,13 @@ Array.prototype.clean = function(deleteValue) {
 	$(document).ready(function() {
 	  // cache some doms
 	  var $loader = $("#loader"),
-	      $tree = $(".tree"),
-	      template = {
-	        apps: {
-			      body:["<td class='name'>{{name}}</td>",
-                  "<td class='port'>{{port}}</td>",
-  		            "<td class='status'>{{running}}</td>",
-  		            "<td class='actions'>{{actions}}</td>"].join(""),
-  		      header: ["<th>name</th>",
-  		               "<th>port</th>",
-  		               "<th>app-status</th>",
-  		               "<th>action</th>"].join("")
-			    },
-			    appdomains: {
-			      body:["<td class='domain'>{{domain}}</td>",
-                  "<td class='appname'>{{appname}}</td>",
-                  "<td class='actions'>{{actions}}</td>"].join(""),
-  		      header: ["<th>domain</th>",
-  		               "<th>appname</th>",
-  		               "<th>action</th>"].join("")
-			    }
-	      };
-        
+	      $content_area = $("#content_area");
 	  // Main Links
 	  // Apps List
 	  // AppDomain List
-		$("a[rel='main']").click(function(e) {
-			e.preventDefault(); // prevent defailt
+		$("a[rel='ajaxify_menu']").click(function(e) {
+		  // show loader first
+			e.preventDefault(); // prevent default
 			// init vars
 			var $this = $(this),
 			    href = $this.attr("href"), // get href from a
@@ -58,19 +36,20 @@ Array.prototype.clean = function(deleteValue) {
 			//remove active class
 			$(".lnav .active").removeClass("active"); 
 			// push state of page
+			// NOTE : have to remove this for back button
 			history.pushState(curr_page, null, curr_page.uri);
 			// add active class
 			$this.parent().addClass("active"); 
 			// fadeout tree
-			$tree.fadeOut('fast', function() {
+			$content_area.fadeOut('fast', function() {
 			  // show loader
 			  $loader.fadeIn('fast');
 			});
 			
-			ajaxHelpers.main({curr_page:curr_page,template:template[curr_page.path]}, function(template) {
+			AjaxHelpers.main(curr_page, function(template) {
   			// hide loader, but show table
   			$loader.fadeOut('fast', function() {
-  			  $tree.html(template).fadeIn("fast");
+  			  $content_area.html(template).fadeIn("fast");
   			}); // hide loader
 			});
 			
@@ -78,10 +57,8 @@ Array.prototype.clean = function(deleteValue) {
 		}); // end onclick
 		
 		// default view to be loaded
-		if( curr_path == "/")
-		  $("#my_apps").trigger('click');
-		else
-		  $("a[href='"+curr_path+"']").trigger('click');
+		if(window.location.pathname == "/")
+      $("a[href='/apps']").trigger('click');
 		  
 	}); // end doc ready
 	
@@ -97,26 +74,48 @@ Array.prototype.clean = function(deleteValue) {
 	  e.preventDefault();
 	  var $this = $(this),
 	      href = $this.attr("href"),
-	      thisHtml = $this.html(),
-	      $allRels = $("a[rel='put']"),
-	      data = JSON.parse($this.attr("data-params"));
+	      actionText = $this.text(),
+	      $allRels = $("a[rel='put']");
+	      
 	  // remove put from rel --- temporary
-	  $allRels.attr("rel", "");
+	  $allRels.removeAttr("rel");
 	  $this.html(Helper.inlineLoader($this));
 	  // send ajax request
 	  $.ajax({
 	    url:"/api" + href,
 	    type:"PUT",
-	    data:data,
+	    data:$this.attr("data-params"),
 	    success:function(r) {
 	      if(r.status == "success") {
+	        // if restart was clicked
+	        if(actionText == "restart") return;
+	        
   	      // since href can be /apps or /appdomains
   	      switch(href.split("/")[1]) {
   	        case 'app':
-  	          var $tRow = $this.parent().parent();
-  	          $tRow.find(".status").text(r.running); // change running
+  	          var $tRow = $this.parent().parent().parent(),
+  	              opts = {},
+  	              appname = $tRow.find(".appname").text();
+  	          
+  	          if(r.running == "true")
+  	            opts = {
+  	              "statusText" : "running",
+  	              "action" : "stop",
+  	              "data-params" : "appname=" + appname +"&running=false"
+  	            }
+  	          else
+  	            opts = {
+  	              "statusText" : "stopped",
+  	              "action" : "start",
+  	              "data-params" : "appname=" + appname +"&running=true" 
+  	            }
+  	          $tRow.find(".status").html(opts["statusText"]); // change status in table
+  	          // change data-params
+  	          $this.attr("data-params", opts['data-params']);
+  	          // change clicked event name
+  	          actionText = opts.action;
   	        break;
-  	        case 'appdomains':
+  	        case 'user':
 	        
   	        break;
   	      }
@@ -127,7 +126,7 @@ Array.prototype.clean = function(deleteValue) {
 	    // on ajax complete, instill put agin
 	    complete:function() {
 	      $allRels.attr("rel", "put");
-	      $this.html(thisHtml);
+	      $this.html(actionText);
 	    }
 	  })
 	  return false;
@@ -199,170 +198,102 @@ Array.prototype.clean = function(deleteValue) {
 	// Methods
 	// SHow Information about APP
 	$("a[rel='modal']").live("click", function(e) {
+	  var $modal = $("#modal");
 	  e.preventDefault();
-	  var $this = $(this),
-	      thisHtml = $this.html(),
-	      href = $this.attr("href"),
-	      $modal = $("#modal"),
-	      appname = $this.attr("data-params"),
-	      modal_template = {
-	        app_info : ["<h2>About <strong>" + appname + "</strong></h2>",
-  	                  "<table cellpadding=0 cellspacing=0 class='table'>",
-  	                  "<tr><td class='label'>port</td><td>{{port}}</td></tr>",
-  	                  "<tr><td class='label'>gitrepo</td><td>{{gitrepo}}</td></tr>",
-  	                  "<tr><td class='label'>start file</td><td>{{start}}</td></tr>",
-  	                  "<tr><td class='label'>app status</td><td>{{running}}</td></tr>",
-  	                  "<tr><td class='label'>process id</td><td>{{pid}}</td></tr>",
-  	                  "</table>",
-  	                  "<p><a href='/app' data-params='" + JSON.stringify({appname: appname}) + "' class='submit r5 redgrad no_u' rel='delete'>Destroy</a></p>"].join(""),
-  	      app_create : ["<h2>Create new app</h2>",
-  	                    "<form method='post' action='/app' class='form'>",
-                	      "<table cellpadding=0 cellspacing=0 class='table'>",
-                        "<tr><td class='form_label'>app name</td>",
-                        "<td><input class='input r5' name='params_appname' id='params_appname' /></td></tr>",
-                        "<tr><td class='form_label'>start file<br /></td>",
-                        "<td><input class='input r5' name='params_start' id='params_start' /></td></tr>",
-  	                    "</table>",
-  	                    "<input type='submit' class='submit r5 bluegrad' value='Create' />",
-  	                    '<p id="failed" class="msg r5" style="display:none; margin-top:10px" ></p>',  	                    
-  	                    "</form>"].join("")
-	      },
-	      modal_type = $this.attr("class");
-	      
-	  // to render forms    
-	  if(modal_type == "app_create") {
-	    $modal.modal({content: modal_template.app_create, onOpen: function() {
-	      // bind the create app form
-	      $modal.find(".form").submit(function(e) {
-	        var $this = $(this),// form obj
-	            href = $this.attr("action"),
-	            $err = $this.find("#failed"); 
-	        // hide error box
-	        $err.hide();
-	        $.ajax({
-	          url: "/api" + href,
-	          type:"post",
-	          data: {appname:$("#params_appname").val(), start:$("#params_start").val()},
-	          success: function(r) {
-	            if(r.status && r.status == "success") {
-	              $("a[href='/apps']").trigger("click"); // refresh app list
-	              $modal.find(".close").trigger("click"); // close modal box
-              } else {
-                $this.find(".input").addClass("error"); // add error class to text
-                $err.html(r.message).show(); // show error
-              }
-	          }          
-	        })
-	        e.preventDefault;
-	        return false;
-	      });
-      }
-	    }); 
-	    return;
-	  }
-    // remove put from rel --- temporary
-	  $this.attr("rel", "");
-	  // show Loader on the spot
-	  $this.html(Helper.inlineLoader($this));
+	  
+	  
 	  $.ajax({
-	    url:"/api" + href,
-	    success:function(r) {
-	      if(r.status == "success") {
-	        $modal.modal({content: Mustache.to_html(modal_template[modal_type],r)}); 
-	      } else {
-	        // error
-	      }
-	    },
-	    // on ajax complete, instill put agin
-	    complete:function() {
-	      $this.attr("rel", "modal");
-	      $this.html(thisHtml);
-	    }
-	  })
-	  return false;
+      url: "/app/new",
+      success: function(r) {
+        if(r.status == 1)
+          $modal.modal({content: r.template, onOpen: function() {
+    	      // bind the create app form
+    	      $modal.find(".form").submit(function(e) {
+    	        var $this = $(this),// form obj
+    	            href = $this.attr("action"),
+    	            $err = $this.find("#failed"); 
+    	        // hide error box
+    	        $err.hide();
+    	        $.ajax({
+    	          url: "/api/app",
+    	          type:"post",
+    	          data: {appname:$("#params_appname").val(), start:$("#params_start").val()},
+    	          success: function(r) {
+    	            if(r.status && r.status == "success") {
+    	              $("a[href='/apps']").trigger("click"); // refresh app list
+    	              $modal.find(".close").trigger("click"); // close modal box
+                  } else {
+                    $this.find(".input").addClass("error"); // add error class to text
+                    $err.html(r.message).show(); // show error
+                  }
+    	          }          
+    	        })
+    	        e.preventDefault;
+    	        return false;
+    	      }); //end form
+          }
+    	    }); //end onOpen
+      }          
+    });
+    
+    return false;
 	});
 	
 	
-	var ajaxHelpers = {
+	/**
+   * AjaxHelpers class here
+   * @class
+   */
+	var AjaxHelpers = {
 	  /**
-	   * Ajax helpers for main
-	   * <b>Expects</b>
-	   * * curr_page (String) - {uri:"",path:""}
-	   * * props (Array) - props for particular api end point
-	   * <b>Returns<?b>
-	   * callback (template)
-	   *
-	  **/
-	  main: function(params,callback) {
-	    var req_vars = params;
+     * Returns template of main links i.e Apps | Domains
+     * @function
+     * @param page {object} uri of the link to query from
+     * @returns {callback} callback with template
+     * @lends AjaxHelpers#
+     */
+	  main: function(page,callback) {
 	    // to get the apps|domains list pages
 			$.ajax({
-				url:"/api" + req_vars.curr_page.uri,
+				url: page.uri,
 				success:function(r) {
 				  // if r.status (for errors)
 				  // if r.length (if not array or == 0)
-				  if(r.status || r.length == 0) {
+				  if(r.status == 0) {
 				    callback("err");
 				    return;  // get out
 			    }
-				  // init vars
-					var keys = Helper.getKeys(r[0]),
-					    len = keys.length;
-				  // check curr_page
-				  if(req_vars.curr_page) {
-				    switch(req_vars.curr_page.path) {
-				      case "apps":
-				      // define params to be sent in the request
-				      // append the params in the data-params
-				      var start_action = JSON.stringify({
-				        appname: "{{name}}",
-				        running: true
-				      }),
-				      stop_action = JSON.stringify({
-				        appname: "{{name}}",
-				        running: false
-				      });
-				      // actions template
-				      var actions_template = [
-  				      "<a href='/app' data-params='" + start_action + "' rel='put'>start</a>",
-  				      "<a href='/app' data-params='" + stop_action + "' rel='put'>stop</a>",
-  				      "<a href='/app/{{name}}' data-params='{{name}}' class='app_info' rel='modal'>info</a>"
-				      ].join(" ");
-				      req_vars.template.body = req_vars.template.body.replace("{{actions}}",actions_template);
-				      break;
-				      // Actions for app domains
-				      case "appdomains":
-				      // define params to be sent in the request
-				      // append the params in the data-params
-				      var domain = JSON.stringify({
-				        appname : "{{appname}}",
-				        domain: "{{domain}}"
-				      });
-				      req_vars.template.body = req_vars.template.body.replace("{{actions}}","<a href='/appdomains' data-params='" + domain + "' rel='delete'>delete</a>");
-				      break;
-				    }
-				  }
 				  // callback with the template
-				  callback(["<thead><tr>",
-				          req_vars.template.header,
-				          "</tr></thead>",
-				          "<tbody>", 
-				          Mustache.to_html("{{#items}}<tr>" + req_vars.template.body + "</tr>{{/items}}", {items:r}),
-				          "</tbody>"].join(""));
-				              
+				  callback(r.template);
 				} // end success of ajax
 			}); // end ajax
 	  }
 	}
 	
-	// Helper Methods
+  /**
+   * AjaxHelpers class here
+   * @class
+   */
 	var Helper = {
-    // Gets URI Path
+	  /**
+     * Returns path from uri
+     * @function
+     * @param uri {string} entire uri
+     * @returns {string} last path from the uri
+     * @lends Helper#
+     */
     getPath: function(uri) {
       var temp = uri.split("/").clean("");
       return temp[temp.length-1];
     },
-    // get keys of object
+    
+    /**
+     * Returns keys of Object
+     * @function
+     * @param obj {object} Javascript Object
+     * @returns {array} keys of all the object
+     * @lends Helper#
+     */
     getKeys: function(obj) {
   	  var keys = [];
       for(var key in obj) {
@@ -370,7 +301,14 @@ Array.prototype.clean = function(deleteValue) {
       }
       return keys;      
     },
-    // return inline loader
+    
+    /**
+     * Returns inline loader
+     * @function
+     * @param $dom {jQuery} jQuery DOM
+     * @returns {string} loader template
+     * @lends Helper#
+     */
     inlineLoader: function($dom) {
       return "<span style='width:" + $dom.width()+ "px; display:inline-block'><img src='/static/i/loader-small.gif' /></span>"
     }
