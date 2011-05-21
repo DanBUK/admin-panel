@@ -2,8 +2,7 @@ var express = require('express'),
 cauth= require('connect-auth'),
 auth = require('./lib/auth'),
 encode = require('./lib/encoding')
-nodester = require('./lib/nodester-api'),
-jade = require('jade');
+nodester = require('./lib/nodester-api');
 
 var app = module.exports = express.createServer();
 
