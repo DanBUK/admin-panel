@@ -1,9 +1,10 @@
 var express = require('express'),
 cauth= require('connect-auth'),
+jade = require('jade'), 
 auth = require('./lib/auth'),
-encode = require('./lib/encoding')
-nodester = require('./lib/nodester-api'),
-jade = require('jade');
+encode = require('./lib/encoding'), 
+md5 = require('./lib/md5'),
+nodester = require('./lib/nodester-api');
 
 var app = module.exports = express.createServer();
 
@@ -33,7 +34,7 @@ var static_routing = express.static(__dirname + '/public',{ maxAge: "6000000" })
 // Checks whether user has logged in
 // No data store used, just plain cookie based auth
 function checkAuth(req,res,next) {
-  req.is_logged = true;
+  req.is_logged = false;
   // if key=>cred is present in session
   // then user is logged in
   // after verification frm nodester
@@ -240,6 +241,6 @@ app.get("*", checkAuth, function(req, res){
 
 // Only listen on $ node app.js
 if (!module.parent) {
-  app.listen(9651);
+  app.listen(10049);
   console.log("Express server listening on port %d", app.address().port);
 }
