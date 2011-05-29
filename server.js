@@ -1,11 +1,15 @@
 var express = require('express'),
 cauth= require('connect-auth'),
 jade = require('jade'), 
+fs = require('fs'), 
 auth = require('./lib/auth'),
 encode = require('./lib/encoding'), 
+language = require('./lib/language'), 
 md5 = require('./lib/md5'),
 nodester = require('./lib/nodester-api');
 
+// get the language
+var lng = language.get("en");
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -40,11 +44,11 @@ function checkAuth(req,res,next) {
   // after verification frm nodester
   if(req.session && req.session.cred) {
     // get from session
-    console.log('logged in');
+    //console.log('logged in');
     req.user = req.session.cred;
     req.is_logged = true;
   } else {
-    console.log('not logged in');
+    //console.log('not logged in');
   }
   next();
 }
@@ -66,10 +70,10 @@ app.get('/logout',checkAuth, function(req,res) {
 app.get('/login',checkAuth, function(req,res) {
   // check whether user is logged in ?
   // then log him out
-  console.log(req.query);
-  console.log(req.params);
-  console.log(req.body);
-
+  //console.log(req.query);
+  //console.log(req.params);
+  //console.log(req.body);
+  
   if(req.is_logged == true)
   res.redirect("/");
   else
@@ -100,15 +104,15 @@ app.post('/login',checkAuth, function(req,res, next) {
 
     // authenticate user
     req.authenticate('awesomeauth', function(err, authenticated) {
-      console.log("auth it");
+      //console.log("auth it");
       if(authenticated) {
         // set session
-        console.log('success');
+        //console.log('success');
         req.session.cred = req.user; //set session
         res.redirect("/");
       } else {
         // don`t set session
-        console.log("failed");
+        //console.log("failed");
         res.redirect("/login?action=failed");
       }
     });
@@ -152,91 +156,90 @@ app.get("*", checkAuth, function(req, res){
       params = req.body;
     }
     
-    // fix...
-    req.params[0] = req.params[0].replace(/^\//,"").replace(/\/$/,"");
-    
-    var route = req.params[0];
-    console.log("routes ... ", route);
-    // default options
-    var options = {
+    // get the route
+	var route = getRoute();
+
+	// default options
+    var data = {
       options: {
         is_logged: req.is_logged,
-        user: req.user.user
+        user: req.user.user,
+		language: lng
       }
     };
     
-    function callNodesterApi(callback) {
-      nodester.request(req.method, req.params[0], params, req.user.creds,function(response) {
+	data.template = route;
+	data["options"]["title"] = lng["en"][route]["title"];
+	
+	 // use switch case to decide template, other options
+    switch(route) {
+      case 'app':
+        callNodesterApi('app', function(response) {
+          data["options"]["app"] = JSON.parse(response);
+		  render();
+        });
+      break;
+      
+      case 'index':
+        callNodesterApi('apps', function(response) {
+          data["options"]["applist"] = JSON.parse(response);
+		  render();
+        });
+      break;
+      
+      case 'appdomains':
+        callNodesterApi('appdomains', function(response) {
+          data["options"]["domainlist"] = JSON.parse(response);
+		  render();
+        });
+      break;
+      
+      case 'app/info':
+        callNodesterApi('app/info', function(response) {
+	  		render();
+        });
+      break;
+	  default:
+	  	render();
+	  break;
+	}
+	
+	
+    function callNodesterApi(command, callback) {
+      nodester.request(req.method, command, params, req.user.creds,function(response) {
         if(typeof(callback) == 'function') {
           callback(response);
         }
       });
     }
     
-    // use switch case to decide template, other options
-    switch(route) {
-      case 'app':
-        console.log('app info', params);
-        options["template"] = "app/show";
-        options["options"]["title"] = "App | Nodester Admin Panel";
-        options["options"]["app"] = JSON.parse(response);
-      break;
-      
-      case 'apps':
-        callNodesterApi(function(response) {
-          options["template"] = "app/index";
-          options["options"]["title"] = "All Apps | Nodester Admin Panel";
-          options["options"]["applist"] = JSON.parse(response);
-          render();
-        });
-      break;
-      
-      case 'appdomains':
-        callNodesterApi(function(response) {
-          options["template"] = "appdomains/index";
-          options["options"]["title"] = "Domain Aliases | Nodester Admin Panel";
-          options["options"]["domainlist"] = JSON.parse(response);
-          render();
-        });
-      break;
-      
-      case 'app/info':
-        callNodesterApi(function(response) {
-          options["template"] = "app/show";
-          render();
-        });
-      break;
-      
-      case 'app/new':
-        options["template"] = "app/new";
-        render();
-      break;
-      
-      default:
-        options["template"] = "index";
-        options["options"]["title"] = "Nodester Admin Panel";
-        render();
-      break;
-    }
-    
-    function render() {
-      // if request is xhr
-      if(req.xhr) {
-        options.options["layout"] = false;
-        res.render(options.template, options.options, function(err, html) {
-          res.header('Content-Type', 'application/json');
-          res.end(JSON.stringify({status:(err ? 0 : 1),template:html}));
-        });
-      } else {
-        // render template
-        res.render(options.template, options.options);
-      }
-    }
+	function getRoute(){
+		var route = req.params[0].replace(/^\//,"").replace(/\/$/,"");
+    	if(route == ""){ 
+			route = "index";
+		}
+		return route;
+	}
+	
+	function render(){
+		if(req.xhr) {
+			data.options["layout"] = false;
+			res.render(data.template, data.options, function(err, html) {
+			  res.header('Content-Type', 'application/json');
+			  res.end(JSON.stringify({status:(err ? 0 : 1),template:html}));
+			});
+		  } else {
+			// render template
+			res.render(data.template, data.options);
+		  }
+  
+	}
+	
   }
 });
 
 // Only listen on $ node app.js
 if (!module.parent) {
   app.listen(10049);
-  console.log("Express server listening on port %d", app.address().port);
+  //console.log("Express server listening on port %d", app.address().port);
 }

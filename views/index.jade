@@ -1,0 +1,13 @@
+!=partial('index/welcome', {})
+ul.snav
+	li
+	a(href="/app/new",rel="modal",class="app_create") Create New App
+	li(class:(typeof(domainlist) != "undefined" ? "active" : ""))
+	a(href="/appdomains") My Domains
+
+#content_wrapper
+- if(is_logged)
+	#content_area
+		!= partial('index/apps', {})
+		
+		!= partial('index/log', {})
