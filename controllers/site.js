@@ -1,4 +1,4 @@
-function my_filter(req,res,next) {
+function set_title(req,res,next) {
   res.vars = {
     title: "Nodester Admin Panel"
   }
@@ -6,9 +6,10 @@ function my_filter(req,res,next) {
 }
 
 module.exports = {
+  // Before Filters to be run
   before_filter: [
     [nodester_admin.middleware.checkAuth],
-    [my_filter],
+    [set_title],
   ],
   
   index: function(req,res,next) {
