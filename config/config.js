@@ -1,5 +1,4 @@
-module.exports.setConfig = function(express) {
-  var app = express.getApp();
+module.exports.setConfig = function(express, app) {
   
   app.configure(function() {
     app.set('views', process.cwd() + '/views');
@@ -32,7 +31,6 @@ module.exports.setConfig = function(express) {
   });
   
   console.log("Server Listening at port ", 3000)  
+  
   app.listen(3000);
-
-  return app;
 }

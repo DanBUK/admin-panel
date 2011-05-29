@@ -3,11 +3,11 @@ html
   head
     title= title
     meta(http-equiv='content-type', content='text/html; charset=UTF-8')
-    link(rel='shortcut icon', href='/static/i/favicon.ico', type='image/vnd.microsoft.icon')
-    link(rel='icon', href='/static/i/favicon.gif', type='image/gif')
-    link(rel='shortcut icon', href='/static/i/favicon.png', type='image/png')
+    link(rel='shortcut icon', href='/i/favicon.ico', type='image/vnd.microsoft.icon')
+    link(rel='icon', href='/i/favicon.gif', type='image/gif')
+    link(rel='shortcut icon', href='/i/favicon.png', type='image/png')
     
-    link(rel='stylesheet', href='/static/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
     script
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-23005703-1']);
@@ -17,34 +17,8 @@ html
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
+      
   body
-    h1 Nodester Admin Panel
-    - if(is_logged)
-      <img src="http://www.gravatar.com/avatar/..." />
-      p.log_info
-        | Howdy <strong>#{user}</strong> ! 
-        a(href="/logout") Logout
-  
-    #content_wrapper
-      - if(is_logged)
-        .sidebar.fl
-          != partial("sidebar")
-      .content.fl
-        #loader
-          img(src:"/static/i/loader.gif")
-        #content_area
-          != body
-      .cl
-    footer
-      p <strong>NOTE</strong>: <br /> This project is work in progress, <br /> kindly file issues/pull requests to 
-        a(href='http://github.com/nodester/admin-panel',target="_blank") http://github.com/nodester/admin-panel
-      p Special Thanks to the creators of <a target="_blank" href='http://nodester.com'>Nodester.com</a> for this brilliant Platform :)
-      p - by <a href="http://twitter.com/michealbenedict" target="_blank">@michealbenedict</a> for <a href="http://twitter.com/nodester" target="_blank">@nodester</a>
-    #modal.modal
-      .close [x]
-      #modal_content
+    != body
       
   script(src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
-  script(src="/static/javascripts/mu.js")
-  script(src="/static/javascripts/jq.modal.js")
-  script(src="/static/javascripts/n.js")

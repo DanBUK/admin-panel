@@ -1,3 +1,4 @@
-nodester.routes.root("apps#index");
-nodester.routes.match("/test","apps#test", {via:"get"});
-nodester.routes.resources("app");
+nodester_admin.routes.root("sites#index");
+
+nodester_admin.routes.match("/login","sites#login");
+nodester_admin.routes.match("/logout","sites#logout");
