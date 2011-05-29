@@ -22,6 +22,8 @@ module.exports = {
   
   logout: function(req,res,next) {
     console.log("logout...");
+    req.session.destroy( ); // destroy cookie session created
+    res.redirect("/"); // redirect to home after delete
   }
     
 }
