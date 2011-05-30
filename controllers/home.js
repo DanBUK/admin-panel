@@ -1,17 +1,40 @@
+function getLanguage(req,res,next) {
+  res.vars = {
+    text: adminmod.lib.getLanguage("en")
+  }
+  next();
+}
 
 module.exports = {
   // Before Filters to be run
   before_filter: [
     [adminmod.middleware.checkAuth],
-    [adminmod.middleware.getLanguage]
+    [getLanguage]
   ],
   
   index: function(req,res,next) {
     if(req.is_logged) {
       console.log("logged as ", req.user);
-      res.render("index", res.vars);
+	  var params = "";
+		// based on verb, get params
+		if(req.method == "GET") {
+		  params = req.query;
+		} else {
+		  params = req.body;
+		}
+    
+	  adminmod.lib.request(req.method, "apps", params, req.user.creds,function(response) {
+		res["applist"] = JSON.parse(response);
+		res.render("index", {
+			is_logged: req.is_logged,
+			user: req.user.user,
+			action : req.query.action,
+			route: "index"
+		});          
+      });
+      
     } else {
-      res.redirect("/login") ;
+      res.redirect("/login");
     }
   },
   

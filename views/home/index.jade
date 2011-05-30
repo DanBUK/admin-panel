@@ -1,4 +1,4 @@
-!=partial('index/welcome', {})
+!=partial('home/welcome', {})
 ul.snav
 	li
 	a(href="/app/new",rel="modal",class="app_create") Create New App
@@ -8,6 +8,6 @@ ul.snav
 #content_wrapper
 - if(is_logged)
 	#content_area
-		!= partial('index/apps', {})
+		!= partial('home/apps', {})
 		
-		!= partial('index/log', {})
+		!= partial('home/log', {})

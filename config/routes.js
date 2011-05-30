@@ -1,4 +1,5 @@
-adminmod.routes.root("sites#index");
-
-adminmod.routes.match("/login","sites#login", {via:"get,post"});
-adminmod.routes.match("/logout","sites#logout");
+adminmod.routes.root("homes#index");
+adminmod.routes.match("/login","homes#login", {via:"get,post"});
+adminmod.routes.match("/logout","homes#logout");
+adminmod.routes.match("/app","apps#index");
+adminmod.routes.match("/user","users#index");
