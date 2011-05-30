@@ -5,8 +5,13 @@ function checkAuth(req,res,next) {
     console.log('user logged in');
     req.user = req.session.cred;
     req.is_logged = true;
+	
   }
+  // broadcast state for the templates
+	res.vars = {
+		is_logged: req.is_logged
+	}
   next();
 }
 
-nodester_admin.middleware.checkAuth = checkAuth;
+adminmod.middleware.checkAuth = checkAuth;

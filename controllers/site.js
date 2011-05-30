@@ -1,21 +1,15 @@
-function set_title(req,res,next) {
-  res.vars = {
-    title: "Nodester Admin Panel"
-  }
-  next();
-}
 
 module.exports = {
   // Before Filters to be run
   before_filter: [
-    [nodester_admin.middleware.checkAuth],
-    [set_title],
+    [adminmod.middleware.checkAuth],
+    [adminmod.middleware.getLanguage]
   ],
   
   index: function(req,res,next) {
     if(req.is_logged) {
       console.log("logged as ", req.user);
-      res.render("index");
+      res.render("index", res.vars);
     } else {
       res.redirect("/login") ;
     }
@@ -27,7 +21,11 @@ module.exports = {
     
     // Show Login Form
     if(req.method === "GET") {
-      res.render("login");
+      res.render("login", {
+    is_logged: req.is_logged,
+    action : req.query.action,
+	route: "login"
+    });
     } else if(req.method === "POST") { // On Login
       console.log('logging him in');
       // Redirect if no user | pass is input

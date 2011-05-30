@@ -4,5 +4,5 @@ var express = require('express'),
 
 var config = require("./config/config");
 config.setConfig(express, app);
-    
-lokki.initApp("nodester_admin", express, app);
+
+lokki.initApp(app.name, express, app);

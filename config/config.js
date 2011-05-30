@@ -1,5 +1,10 @@
 module.exports.setConfig = function(express, app) {
   
+  //app.port = 3000;
+  //app.name = "nodester_admin";
+  app.port = 10049;
+  app.name = "adminmod";
+   
   app.configure(function() {
     app.set('views', process.cwd() + '/views');
     app.set('view engine', 'jade');
@@ -30,7 +35,7 @@ module.exports.setConfig = function(express, app) {
     res.render('404', {title: "404 Error",status: 404});
   });
   
-  console.log("Server Listening at port ", 3000)  
+  console.log("Server Listening at port ", app.port)  
   
-  app.listen(3000);
+  app.listen(app.port);
 }
