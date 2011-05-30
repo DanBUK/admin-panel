@@ -9,7 +9,7 @@ md5 = require('./lib/md5'),
 nodester = require('./lib/nodester-api');
 
 // get the language
-var lng = language.get("en");
+var text = language.get("en");
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -78,9 +78,10 @@ app.get('/login',checkAuth, function(req,res) {
   res.redirect("/");
   else
   res.render('login', {
-    title: 'Login | Nodester Admin Panel',
     is_logged: req.is_logged,
-    action : req.query.action
+    action : req.query.action,
+	text: text, 
+	route: "login"
   });
 });
 
@@ -164,12 +165,12 @@ app.get("*", checkAuth, function(req, res){
       options: {
         is_logged: req.is_logged,
         user: req.user.user,
-		language: lng
+		text: text, 
+		route: route
       }
     };
     
 	data.template = route;
-	data["options"]["title"] = lng["en"][route]["title"];
 	
 	 // use switch case to decide template, other options
     switch(route) {

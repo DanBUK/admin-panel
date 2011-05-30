@@ -1,5 +1,14 @@
+- var appParams = "appname=" + app.name + "&running=" + (appStatus ? "false" : "true");
 h2 About <strong>#{appname}</strong>
 table.table(cellpadding:0,cellspacing:0)
   tr
     td.label process id
     td= appinfo.pid
+	td.action
+	  span
+		a.control(href:"/app","data-params":appParams,rel:"put")
+		  = appStatus ? "stop" : "start"
+	  span
+		a.control(href:"/app","data-params":"appname=" + app.name + "&running=restart",rel:"put") restart
+	  span 
+		a.info(href:"/app/" + app.name,rel:"modal") info

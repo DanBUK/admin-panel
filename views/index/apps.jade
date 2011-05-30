@@ -1,23 +1,6 @@
-table.tree(cellspacing:0, cellpadding:0, border:0)
-  thead
-    tr
-      th app name
-      th port
-      th app status
-      th actions
-  tbody
-    - each app in applist
-      - var appStatus = app.running == "true";
-      - var appParams = "appname=" + app.name + "&running=" + (appStatus ? "false" : "true");
-      tr(class:(appStatus ? "app_running" : "app_stopped"))
-        td.appname #{app.name}
-        td.appport #{app.port}
-        td.status #{appStatus ? "running" : "stopped"}
-        td.action
-          span
-            a.control(href:"/app","data-params":appParams,rel:"put")
-              = appStatus ? "stop" : "start"
-          span
-            a.control(href:"/app","data-params":"appname=" + app.name + "&running=restart",rel:"put") restart
-          span 
-            a.info(href:"/app/" + app.name,rel:"modal") info
+- each app in applist
+  - var appStatus = app.running == "true";
+	h3(class:(appStatus ? "app_running" : "app_stopped") #{app.name}
+	ul(class:"propetries")
+		li #{app.port}
+	
