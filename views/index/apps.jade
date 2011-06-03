@@ -2,4 +2,6 @@
   - var appStatus = app.running == "true";
     h3(class:(appStatus) ? "app_running" : "app_stopped") #{app.name}
     ul(class:"propetries")
-      li #{app.port}
+      li ID: #{app.pid}
+      li Port: #{app.port}
+      input(type:"text", value: app.gitrepo)

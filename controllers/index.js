@@ -5,11 +5,18 @@ function getLanguage(req,res,next) {
   next();
 }
 
+function gravatarHash(req,res,next) {
+  // when this becomes dynamic first convert the email strinf to lower case .toLowerCase()
+  res.vars.email_hash = adminmod.lib.md5("makis.tracend@gmail.com");
+  next();
+}
+
 module.exports = {
   // Before Filters to be run
   before_filter: [
     [adminmod.middleware.checkAuth],
-    [getLanguage]
+    [getLanguage],
+    [gravatarHash]
   ],
   
   home: function(req,res,next) {
