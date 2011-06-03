@@ -1,6 +1,6 @@
 function getLanguage(req,res,next) {
   res.vars = {
-    text: adminmod.lib.getLanguage("en")
+	  text: adminmod.lib.getLanguage("en")
   }
   next();
 }
@@ -12,7 +12,7 @@ module.exports = {
     [getLanguage]
   ],
   
-  index: function(req,res,next) {
+  home: function(req,res,next) {
     if(req.is_logged) {
       console.log("logged as ", req.user);
 	  var params = "";
@@ -23,13 +23,15 @@ module.exports = {
 		  params = req.body;
 		}
     
-	  adminmod.lib.request(req.method, "apps", params, req.user.creds,function(response) {
-		res["applist"] = JSON.parse(response);
-		res.render("index", {
+	  adminmod.lib.request(req.method, "apps", params, req.user.creds, function(response) {
+	  //adminmod.lib.authorize(req.user.creds, function(response) {
+		res.vars.applist = JSON.parse(response);
+		console.log(res.vars.applist);
+		res.render("home", {
 			is_logged: req.is_logged,
 			user: req.user.user,
 			action : req.query.action,
-			route: "index"
+			route: "home"
 		});          
       });
       

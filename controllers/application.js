@@ -8,9 +8,7 @@ function checkAuth(req,res,next) {
 	
   }
   // broadcast state for the templates
-	res.vars = {
-		is_logged: req.is_logged
-	}
+  //res.vars.is_logged = req.is_logged;
   next();
 }
 

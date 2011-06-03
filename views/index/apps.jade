@@ -1,5 +1,5 @@
 - each app in applist
   - var appStatus = app.running == "true";
-    h3(class:(appStatus ? "app_running" : "app_stopped") #{app.name}
+    h3(class:(appStatus) ? "app_running" : "app_stopped") #{app.name}
     ul(class:"propetries")
       li #{app.port}
