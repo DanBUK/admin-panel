@@ -1,7 +1,10 @@
 - each app in applist
-  - var appStatus = app.running == "true";
-    h3(class:(appStatus) ? "app_running" : "app_stopped") #{app.name}
-    ul(class:"propetries")
-      li ID: #{app.pid}
-      li Port: #{app.port}
-      input(type:"text", value: app.gitrepo)
+	- var appStatus = app.running == "true";
+	h3(class:(appStatus) ? "app_running" : "app_stopped")
+		a(href:"/app/"+app.name)#{app.name}
+	ul(class:"propetries")
+		li ID: #{app.pid}
+		li Port: #{app.port}
+	div
+		p(class:"button") git
+		input(type:"text", value: app.gitrepo)

@@ -1,14 +1,14 @@
-- var appParams = "appname=" + app.name + "&running=" + (appStatus ? "false" : "true");
+- var appStatus = app.running == "true";
+- var appParams = "appname=" + appname + "&running=" + (appStatus ? "false" : "true");
 h2 About <strong>#{appname}</strong>
-table.table(cellpadding:0,cellspacing:0)
-  tr
-    td.label process id
-    td= appinfo.pid
-	td.action
-	  span
-		a.control(href:"/app","data-params":appParams,rel:"put")
-		  = appStatus ? "stop" : "start"
-	  span
-		a.control(href:"/app","data-params":"appname=" + app.name + "&running=restart",rel:"put") restart
-	  span 
-		a.info(href:"/app/" + app.name,rel:"modal") info
+ul.action
+	li
+		a(href:"/app","data-params":appParams,rel:"put") 
+			= appStatus ? "stop" : "start"
+	li
+		a(href:"/app","data-params":"appname=" + appname + "&running=restart",rel:"put") restart
+div.info
+	ul(class:"propetries")
+		li ID: #{app.pid}
+		li Port: #{app.port}
+	input(type:"text", value: app.gitrepo)

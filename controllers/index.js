@@ -31,9 +31,7 @@ module.exports = {
 		}
     
 	  adminmod.lib.request(req.method, "apps", params, req.user.creds, function(response) {
-	  //adminmod.lib.authorize(req.user.creds, function(response) {
-		res.vars.applist = JSON.parse(response);
-		console.log(res.vars.applist);
+	  	res.vars.applist = JSON.parse(response);
 		res.render("home", {
 			is_logged: req.is_logged,
 			user: req.user.user,
