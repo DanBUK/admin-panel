@@ -14,7 +14,7 @@ module.exports.setConfig = function(express, app) {
     app.use(express.cookieParser());
     app.use(express.session({key :"ns",secret: "keyboard cat" }));
     app.use(app.router);
-    app.use(express.static( process.cwd() + '/public',{ maxAge: "6000000" }));
+    app.use("/static/", express.static( process.cwd() + '/public/',{ maxAge: "6000000" }));
   });
 
   app.configure('development', function(){
