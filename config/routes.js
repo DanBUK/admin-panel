@@ -5,4 +5,7 @@ adminmod.routes.match("/app/*","apps#index");
 adminmod.routes.match("/appdomains","appdomains#index");
 adminmod.routes.match("/appdomain/create","appdomains#create");
 adminmod.routes.match("/appdomain/delete","appdomains#delete");
+adminmod.routes.match("/module/install/*","modules#install");
+adminmod.routes.match("/module/update/*","moduless#update");
+adminmod.routes.match("/module/uninstall/*","moduless#uninstall");
 adminmod.routes.match("/user","users#index");
