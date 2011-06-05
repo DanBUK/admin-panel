@@ -1,6 +1,10 @@
 adminmod.routes.root("indexs#home");
 adminmod.routes.match("/login","indexs#login", {via:"get,post"});
 adminmod.routes.match("/logout","indexs#logout");
+adminmod.routes.match("/app/new","apps#new");
+adminmod.routes.match("/app/create","apps#create");
+adminmod.routes.match("/app/update","apps#update");
+adminmod.routes.match("/app/delete","apps#delete");
 adminmod.routes.match("/app/*","apps#index");
 adminmod.routes.match("/appdomains","appdomains#index");
 adminmod.routes.match("/appdomain/create","appdomains#create");

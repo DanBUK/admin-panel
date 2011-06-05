@@ -43,6 +43,25 @@ module.exports = {
     } else {
       res.redirect("/login") ;
     }
+  }, 
+  
+  new: function(req,res,next) {
+	  res.render("app/new", {
+		  layout: false, 
+		  route: "app/new"
+		});
+  }, 
+  
+  create: function(req,res,next) {
+	  res.render();
+  },
+  
+  update: function(req,res,next) {
+	  res.render();
+  },
+  
+  delete: function(req,res,next) {
+	  res.render();
   }
-      
+  
 }
