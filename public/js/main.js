@@ -22,6 +22,8 @@ Array.prototype.clean = function(deleteValue) {
 	  // cache some doms
 	  var $loader = $("#loader"),
 	      $content_area = $("#content_area");
+	  // create the modal
+	  //$("body").append('<div id="modal"><!-- --></div>');
 	  // Main Links
 	  // Apps List
 	  // AppDomain List
@@ -207,10 +209,9 @@ Array.prototype.clean = function(deleteValue) {
 	  // send ajax
 	  $.ajax({
       url: href,
-      success: function(r) {
-        if(r.status == 1) {
+      success: function(response) {
           $modal.modal(
-            {content: r.template, 
+            {content: response, 
               onOpen: function() {
                 switch(modal_type) {
             	    case 'info':
@@ -247,7 +248,6 @@ Array.prototype.clean = function(deleteValue) {
                 } // switch
               } // onopen
     	    }); //end modal
-  	    }
       }
     });
     
