@@ -13,14 +13,19 @@ menu, footer, header, nav, section, summary, time, mark, audio, video {
   border: 0;
 }
 
+/* Basic tags */
 article, aside, canvas, figure, figure img, figcaption, hgroup,
 footer, header, nav, section, audio, video {
   display: block;
 }
 
+html, body {
+  min-height: 100%;
+}
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-size: 1em;
+  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
   color:#4b4b4b;
 }
 
@@ -43,6 +48,7 @@ a {
   color: #1d64a0;
 }
 
+/* Common styles */
 .fr {
 	float:right;
 }
@@ -59,10 +65,74 @@ a {
 	clear:both;
 }
 
-#content_wrapper {
-  padding-top:1.4em;
-  min-height:250px;
+/* Layout */
+header {
+	height: 100px;
+	background: #000;
 }
+
+h1#logo { 
+	float: left;
+	width: 325px;
+	height: 100px;
+	margin-left: 24px;
+	background: url(../img/logo.jpg);
+	text-indent: -9999px;
+}
+
+/* - Top Menu */
+hgroup {
+	float: right;
+}
+
+hgroup ul {
+	list-style-type: none;
+	margin: 36px 48px 0 0;
+}
+
+hgroup ul li{
+	float: left;
+	margin-right: 24px;
+}
+
+hgroup ul a{
+	color: #fff;
+	text-decoration: none;
+}
+
+hgroup ul a:hover{
+	text-decoration: underline;
+}
+
+#page {
+	background: #fff;
+	padding: 48px;
+}
+
+#content {
+	min-height:250px;
+}
+
+footer { 
+	position: relative;
+	bottom: 0;
+	padding: 48px;
+	background: #000;
+	color: #eee;
+	font-size:12px;
+}
+
+footer p {
+  margin:0;
+  padding:0.4em 0 ;
+  line-height:1.4em;
+}
+
+footer a {
+	 color: #ff6;
+}
+
+/* OLD */
 
 .sidebar {
 	width:200px;
@@ -109,9 +179,9 @@ ul.lnav > li.active ul.snav {
 }
 
 
-
 .login_wrap {
   width:420px;
+  margin: 48px auto;
 }
 
 span.label {
@@ -224,16 +294,6 @@ p#incomplete {
   margin:0 5px;
 }
 
-footer {
-  margin-top:2em;
-  font-size:12px;
-}
-
-footer p {
-  margin:0;
-  padding:0.4em 0 ;
-  line-height:1.4em;
-}
 
 /**** MODAL ****/
 .modal {

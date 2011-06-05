@@ -5,9 +5,15 @@ function getLanguage(req,res,next) {
   next();
 }
 
-function gravatarHash(req,res,next) {
-  // when this becomes dynamic first convert the email strinf to lower case .toLowerCase()
-  res.vars.email_hash = adminmod.lib.md5("makis.tracend@gmail.com");
+function getGravatar(req,res,next) {
+  /*if(req.user.email != undefined){
+  	// when this becomes dynamic first convert the email strinf to lower case .toLowerCase()
+  	var email_hash = adminmod.lib.md5( req.user.email );
+  	res.vars.gravatar = "http://www.gravatar.com/avatar/"+email_hash;
+  } else {*/
+	// revert to a default image
+  	res.vars.gravatar = "/static/img/gravatar-48.png";
+  //}
   next();
 }
 
@@ -16,7 +22,7 @@ module.exports = {
   before_filter: [
     [adminmod.middleware.checkAuth],
     [getLanguage],
-    [gravatarHash]
+    [getGravatar]
   ],
   
   home: function(req,res,next) {

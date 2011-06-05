@@ -1,6 +1,4 @@
-h1 Nodester Admin Panel
-	- if(is_logged)
-	img(src: "http://www.gravatar.com/avatar/"+email_hash)
-	p.log_info
-	| Howdy <strong>#{user}</strong> ! 
-	a(href="/logout") Logout
+- if(is_logged)
+	img.gravatar(src: gravatar)
+	p.log_info Howdy 
+		b #{user}! 

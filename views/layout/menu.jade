@@ -1,11 +1,14 @@
-ul#top-menu
 - if(is_logged)
-	li.first(class:(typeof(applist) != "undefined" ? "active" : ""))
-	a(href="/") Home
-	li
-	a(href="/logout") Logout
+	hgroup
+		ul
+			li.first(class:(typeof(applist) != "undefined" ? "active" : ""))
+				a(href="/") Home
+			li
+				a(href="/logout") Logout
 - else
-	li
-	a(href="http://nodester.com/") Register
-	li
-	a Contact
+	hgroup
+		ul
+			li
+				a(href="http://nodester.com/") Register
+			li
+				a((href="http://nodester.com/api.html") API
