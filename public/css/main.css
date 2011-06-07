@@ -65,6 +65,77 @@ a {
 	clear:both;
 }
 
+
+.r5 {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  /* useful if you don't want a bg color from leaking outside the border: */        
+  -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; 
+}
+
+.r10 {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  /* useful if you don't want a bg color from leaking outside the border: */        
+  -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; 
+}
+
+
+.bluegrad {
+  background-color: #3289d3;
+  background-image: -moz-linear-gradient(top, #3289d3, #1a6db4); /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #3289d3, #1a6db4); /* IE10 */
+  background-image: -o-linear-gradient(top, #3289d3, #1a6db4); /* Opera 11.10+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#3289d3), to(#1a6db4)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #3289d3, #1a6db4); /* Chrome 10+, Saf5.1+ */
+  background-image: linear-gradient(top, #3289d3, #1a6db4);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#3289d3', EndColorStr='#1a6db4'); /* IE6–IE9 */
+}
+
+.redgrad {
+  background:firebrick;
+}
+
+
+.yellowgrad {
+  background-color: #ffff99;
+  background-image: -moz-linear-gradient(top, #ffff99, #ffcc33); /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #ffff99, #ffcc33); /* IE10 */
+  background-image: -o-linear-gradient(top, #ffff99, #ffcc33); /* Opera 11.10+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffff99), to(#ffcc33)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #ffff99, #ffcc33); /* Chrome 10+, Saf5.1+ */
+  background-image: linear-gradient(top, #ffff99, #ffcc33);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffff99', EndColorStr='#ffcc33'); /* IE6–IE9 */
+}
+
+.button {
+	padding: 8px 12px;
+	margin: 0 8px;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.button.bluegrad {
+	color: #ccc;
+	border: solid 1px #08d;;
+}
+
+.button.bluegrad:hover {
+	color: #fff;
+}
+
+.button.yellowgrad {
+	color: #930;
+	border: solid 1px #a93;
+}
+
+.button.yellowgrad:hover {
+	 color: #f00;
+}
+
+
 /* Layout */
 header {
 	height: 100px;
@@ -81,39 +152,60 @@ h1#logo {
 }
 
 /* - Top Menu */
-hgroup {
+header hgroup {
 	float: right;
 }
 
-hgroup ul {
+header hgroup ul {
 	list-style-type: none;
 	margin: 36px 48px 0 0;
 }
 
-hgroup ul li{
+header hgroup ul li{
 	float: left;
 	margin-right: 24px;
 }
 
-hgroup ul a{
+header hgroup ul a{
 	color: #fff;
 	text-decoration: none;
 }
 
-hgroup ul a:hover{
+header hgroup ul a:hover{
 	text-decoration: underline;
 }
 
-#page {
+.page {
 	background: #fff;
-	padding: 48px;
+	padding: 24px 48px;
+}
+
+#welcome {
+	height: 92px;
+}
+
+#welcome .gravatar {
+	float: left;
+	border: solid 1px #eee;
+	padding: 8px;
+}
+
+#welcome h2 {
+	float: left;
+	padding: 12px 0 0 12px;
+}
+
+#welcome .actions {
+	margin-top: 20px;
 }
 
 #content {
+	clear: both;
 	min-height:250px;
 }
 
 footer { 
+	clear: both;
 	position: relative;
 	bottom: 0;
 	padding: 48px;
@@ -131,6 +223,116 @@ footer p {
 footer a {
 	 color: #ff6;
 }
+
+/* App Listings */
+section.app-listing {
+	padding: 0 24px 24px 24px;
+	margin-bottom: 24px;
+	background: #eee;
+	border: solid 1px #aaa;
+}
+
+section.app-listing hgroup {
+	padding-top: 12px;
+	margin-left: -16px;
+	height: 50px	
+}
+
+section.app-listing .app-running {
+	padding-left: 32px;
+	background: url(../img/icons/app-running.png) 0 4px no-repeat;
+}
+
+section.app-listing .app-stopped {
+	padding-left: 32px;
+	background: url(../img/icons/app-stopped.png) 0 4px no-repeat;
+}
+
+hgroup h3 {
+	float: left;
+	font-size: 1.5em;
+}
+
+hgroup h3 a {
+	text-decoration: none;
+}
+
+
+hgroup h3 a:hover {
+	text-decoration: underline;
+}
+
+
+#home #content #apps {
+	float: left;
+	width: 79%;
+}
+
+#home #content #log {
+	float: right;
+	width: 19%;
+}
+
+
+/* - Properties */
+
+section hgroup ul.properties {
+	float: right;
+	list-style-type: none;
+	margin: 8px 0 0 0;
+	color: #999;
+}
+
+section hgroup ul.properties li{
+	float: left;
+	margin-right: 12px;
+}
+
+.git {
+	min-height: 48px;
+}
+.git .button{ 
+	float: left;
+	font-size: 1.1em;
+	margin-top: 4px;	
+}
+
+
+.git input {
+	float: left;
+	width: 80%;
+	padding: 8px;
+	color: #666;
+	font-size: 1.2em;
+}
+
+
+/* - Actions */
+
+ul.actions {
+	float: right;
+	list-style-type: none;
+	margin-right: -12px;
+}
+
+ul.actions li{
+	float: left;
+	margin-right: 12px;
+}
+
+
+
+#log .status{
+	padding-bottom: 24px;
+}
+
+/* - links */
+#log .links li{
+	list-style-type: circle;
+}
+
+
+
 
 /* OLD */
 
@@ -220,21 +422,6 @@ input.error {
   background-color: #1d64a0;
 }
 
-.bluegrad {
-  background-color: #3289d3;
-  background-image: -moz-linear-gradient(top, #3289d3, #1a6db4); /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #3289d3, #1a6db4); /* IE10 */
-  background-image: -o-linear-gradient(top, #3289d3, #1a6db4); /* Opera 11.10+ */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#3289d3), to(#1a6db4)); /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #3289d3, #1a6db4); /* Chrome 10+, Saf5.1+ */
-  background-image: linear-gradient(top, #3289d3, #1a6db4);
-            filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#3289d3', EndColorStr='#1a6db4'); /* IE6–IE9 */
-}
-
-.redgrad {
-  background:firebrick;
-}
-
 p.log_info {
   font-size:12px;
 }
@@ -252,13 +439,7 @@ p#incomplete {
   color:#fff;
 }
 
-.r5 {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  /* useful if you don't want a bg color from leaking outside the border: */        
-  -moz-background-clip: padding; -webkit-background-clip: padding-box; background-clip: padding-box; 
-}
+
 
 .tree,
 .table {
