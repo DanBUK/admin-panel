@@ -337,3 +337,19 @@ Array.prototype.clean = function(deleteValue) {
     }
   }
 })(jQuery);
+
+function ajaxFormSubmit(name){
+	var form = document.forms[name];
+	$.ajax({
+   		type: form["method"],
+   		url: form['action'],
+   		data: $(form).serialize(),
+	   success: function(msg){
+		   console.log(msg);
+	
+		 alert( "Data Saved: " + msg );
+	   }
+ 	});
+	//modal_content
+	return false;
+}

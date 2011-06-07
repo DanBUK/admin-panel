@@ -1,5 +1,8 @@
-label name: 
-input(type:"text")
-
-label server file: 
-input(type:"text")
+form(method:"post",action:"/app/create", name="formAppCreate", onsubmit:"ajaxFormSubmit('formAppCreate'); return false;")
+	label Application name: 
+	input(type:"text", name:"appname", placeholder:"no spaces pls")
+	
+	label Server file: 
+	input(type:"text", name:"start")
+	
+	input.submit.r5.bluegrad(type="submit", value="Create")

@@ -46,14 +46,26 @@ module.exports = {
   }, 
   
   new: function(req,res,next) {
-	  res.render("app/new", {
-		  layout: false, 
-		  route: "app/new"
+		res.render("app/new", {
+			layout: false, 
+			route: "app/new"
 		});
   }, 
   
   create: function(req,res,next) {
-	  res.render();
+	var params = req.route.params;
+	if(req.is_logged) {
+		adminmod.lib.request(req.method, "app", params, req.user.creds, function(response) {
+	  	res.vars.app = JSON.parse(response);
+		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
+		res.render("app/create", {
+			layout: false, 
+			route: "app/create"
+		});
+	  });
+	} else {
+		res.redirect("/login") ;
+	}
   },
   
   update: function(req,res,next) {

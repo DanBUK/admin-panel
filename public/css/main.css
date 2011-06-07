@@ -118,7 +118,7 @@ a {
 }
 
 .button.bluegrad {
-	color: #ccc;
+	color: #ddd;
 	border: solid 1px #08d;;
 }
 
@@ -180,22 +180,22 @@ header hgroup ul a:hover{
 	padding: 24px 48px;
 }
 
-#welcome {
+.headline {
 	height: 92px;
 }
 
-#welcome .gravatar {
+.headline .gravatar {
 	float: left;
 	border: solid 1px #eee;
 	padding: 8px;
 }
 
-#welcome h2 {
+.headline h2 {
 	float: left;
 	padding: 12px 0 0 12px;
 }
 
-#welcome .actions {
+.headline .actions {
 	margin-top: 20px;
 }
 
@@ -312,12 +312,11 @@ section hgroup ul.properties li{
 ul.actions {
 	float: right;
 	list-style-type: none;
-	margin-right: -12px;
+	margin-right: -8px;
 }
 
 ul.actions li{
 	float: left;
-	margin-right: 12px;
 }
 
 
