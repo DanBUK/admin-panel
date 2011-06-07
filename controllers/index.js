@@ -21,24 +21,23 @@ module.exports = {
   home: function(req,res,next) {
     if(req.is_logged) {
       console.log("logged as ", req.user);
-	  var params = "";
-		// based on verb, get params
-		if(req.method == "GET") {
-		  params = req.query;
-		} else {
-		  params = req.body;
-		}
+  	  var params = "";
+  		// based on verb, get params
+  		if(req.method == "GET") {
+  		  params = req.query;
+  		} else {
+  		  params = req.body;
+  		}
     
-	  adminmod.lib.request(req.method, "apps", params, req.user.creds, function(response) {
-	  	res.vars.applist = JSON.parse(response);
-		res.render("home", {
-			is_logged: req.is_logged,
-			user: req.user.user,
-			action : req.query.action,
-			route: "home"
-		});          
-      });
-      
+  	  adminmod.lib.request(req.method, "apps", params, req.user.creds, function(response) {
+  	  	res.vars.applist = JSON.parse(response);
+  		  res.render("home", {
+    			is_logged: req.is_logged,
+    			user: req.user.user,
+    			action : req.query.action,
+    			route: "home"
+    		});
+      });  
     } else {
       res.redirect("/login");
     }
@@ -46,15 +45,19 @@ module.exports = {
   
   login: function(req,res,next) {
     // If already Logged in
-    if(req.is_logged) { console.log("already logged in"); res.redirect("/"); return false; }
+    if(req.is_logged) { 
+      console.log("already logged in"); 
+      res.redirect("/"); 
+      return false; 
+    }
     
     // Show Login Form
     if(req.method === "GET") {
       res.render("login", {
-    is_logged: req.is_logged,
-    action : req.query.action,
-	route: "login"
-    });
+        is_logged: req.is_logged,
+        action : req.query.action,
+  	    route: "login"
+      });
     } else if(req.method === "POST") { // On Login
       console.log('logging him in');
       // Redirect if no user | pass is input
@@ -74,7 +77,12 @@ module.exports = {
   },
   
   logout: function(req,res,next) {
-    console.log("logout...");
+    // If already Logged in
+    if(!req.is_logged) { 
+      console.log("already logged out in"); 
+      res.redirect("/"); 
+      return false; 
+    }
     req.session.destroy( ); // destroy cookie session created
     res.redirect("/login"); // redirect to home after delete
   }

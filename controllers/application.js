@@ -8,13 +8,17 @@
  * Checks whether User is logged in
  */
 function checkAuth(req,res,next) {
-  req.is_logged = false;
+  req.is_logged = true;
   if(req.session && req.session.cred) {
     // get from session
     console.log('user logged in');
     req.user = req.session.cred;
     req.is_logged = true;
   }
+  // req.user = {
+  //   creds: "user:pass",
+  //   user: "user"
+  // }
   // broadcast state for the templates
   //res.vars.is_logged = req.is_logged;
   next();
