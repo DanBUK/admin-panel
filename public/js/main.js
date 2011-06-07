@@ -24,6 +24,14 @@ Array.prototype.clean = function(deleteValue) {
 	      $content_area = $("#content_area");
 	  // create the modal
 	  //$("body").append('<div id="modal"><!-- --></div>');
+	  
+	  // initiate copy to clipboard
+		$('.git .button').zclip({
+			path:'/static/swf/ZeroClipboard.swf',
+			copy:function(){return $(this).next("input").val();}
+		});
+
+
 	  // Main Links
 	  // Apps List
 	  // AppDomain List
