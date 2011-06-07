@@ -1,10 +1,3 @@
-function getLanguage(req,res,next) {
-  res.vars = {
-	  text: adminmod.lib.getLanguage("en")
-  }
-  next();
-}
-
 function getGravatar(req,res,next) {
   /*if(req.user.email != undefined){
   	// when this becomes dynamic first convert the email strinf to lower case .toLowerCase()
@@ -21,7 +14,7 @@ module.exports = {
   // Before Filters to be run
   before_filter: [
     [adminmod.middleware.checkAuth],
-    [getLanguage],
+    [adminmod.middleware.getLanguage],
     [getGravatar]
   ],
   

@@ -1,3 +1,4 @@
+
 function getLanguage(req,res,next) {
   res.vars = {
     text: adminmod.lib.getLanguage("en")
