@@ -8,7 +8,7 @@
  * Checks whether User is logged in
  */
 function checkAuth(req,res,next) {
-  req.is_logged = true;
+  req.is_logged = false;
   if(req.session && req.session.cred) {
     // get from session
     console.log('user logged in');
