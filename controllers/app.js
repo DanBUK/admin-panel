@@ -5,13 +5,12 @@ module.exports = {
     [adminmod.middleware.getLanguage]
   ],
   
-  index: function(req,res,next) {
+  show: function(req,res,next) {
 	var params = "";
 	if(req.is_logged) {
-      var appname = res.vars.appname = req.route.params[0];
+      var appname = res.vars.appname = req.route.params["id"];
 	  adminmod.lib.request(req.method, "app/"+appname, params, req.user.creds, function(response) {
 	  	res.vars.app = JSON.parse(response);
-		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
 		res.render("app", {
 			is_logged: req.is_logged,
 			user: req.user.user,

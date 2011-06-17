@@ -4,12 +4,13 @@ adminmod.routes.match("/logout","indexs#logout");
 
 // resources generates the following
 // resourceful routes i.e
-// GET /apps -> apps#index
-// GET /apps/new ->  apps#new
-// GET /apps/:id/edit ->  apps#edit
-// POST /apps -> apps#create
-// PUT /apps/:id -> apps#update
-// DEL /apps/:id -> apps#destroy
+// GET /app -> apps#index
+// GET /app/:id -> apps#show
+// GET /app/new ->  apps#new
+// GET /app/:id/edit ->  apps#edit
+// POST /app -> apps#create
+// PUT /app/:id -> apps#update
+// DEL /app/:id -> apps#delete
 adminmod.routes.resources("app");
 
 // adminmod.routes.match("/app/new","apps#new");
