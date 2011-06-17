@@ -11,17 +11,32 @@ module.exports = {
       var appname = res.vars.appname = req.route.params["id"];
 	  adminmod.lib.request(req.method, "app/"+appname, params, req.user.creds, function(response) {
 	  	res.vars.app = JSON.parse(response);
-		res.render("app", {
+		res.render("app/show", {
 			is_logged: req.is_logged,
 			user: req.user.user,
 			action : req.query.action,
-			route: "app"
+			route: "app/show"
 		});
 	  });
     } else {
       res.redirect("/login") ;
     }
   }, 
+  
+  edit: function(req,res,next) {
+	    var params = "";
+		var appname = res.vars.appname = req.route.params["id"];
+		adminmod.lib.request(req.method, "app/"+appname, params, req.user.creds, function(response) {
+	  		res.vars.app = JSON.parse(response);
+			console.log("app: ", res.vars.app);
+			res.render("app/edit", {
+				is_logged: req.is_logged,
+				user: req.user.user,
+				action : req.query.action,
+				route: "app/edit"
+			});
+		});
+  },
   
   new: function(req,res,next) {
 		res.render("app/new", {

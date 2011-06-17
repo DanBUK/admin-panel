@@ -1,0 +1,16 @@
+.page#app
+	div.headline
+		h2 Edit #{appname}
+	
+	form#app-edit(action:"app/update")
+		label(for:"appname") Application: 
+		input(name:"appname", readonly: "readonly", value: appname)
+		
+		label(for:"adddomain") Domain: 
+		input(name:"appdomain", value: "")
+		
+		fieldset#modules
+			!= partial('app/modules', {})
+	
+	form#app-delete(action:"app/delete")
+		input(type:"submit", class:"button redgrad r5", value: "Delete App")
