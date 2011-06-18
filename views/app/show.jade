@@ -1,22 +1,22 @@
 - var appStatus = app.running == "true";
 - var appAction = appStatus ? "stop" : "start";
 - var appParams = "appname=" + appname + "&running=" + (appStatus ? "false" : "true");
+
 .page#app
-	div.headline
-		h2 About #{appname}... 
-			a(href:"/", title="back to home...") <small>&lt; back</small>
-		ul.actions
-			li
-				a(href:"/app","data-params":appParams,rel:"put",class:"button yellowgrad r5", title:  appAction+" the app") #{appAction}
-			li
-				a(href:"/app","data-params":"appname=" + appname + "&running=restart",rel:"put",class:"button yellowgrad r5", title: "restart the app") restart
-			li
-				a(href:"/app/"+appname+"/edit",class:"button bluegrad r5", title: "edit app properties") edit
-	section(class:"app-listing r10")
-		hgroup
-			ul(class:"properties")
-				li ID: #{app.pid}
-				li Port: #{app.port}
-		div.git
-			p(class:"button bluegrad r5", title:"copy to clipboard") git
-			input(type:"text", value: app.gitrepo, readonly:"readonly")
+  div.headline
+    h2 About #{appname}
+    ul.actions
+      li
+        a(href:"/app","data-params":appParams,rel:"put",class:"button yellowgrad r5", title:  appAction+" the app") #{appAction}
+      li
+        a(href:"/app","data-params":"appname=" + appname + "&running=restart",rel:"put",class:"button yellowgrad r5", title: "restart the app") restart
+      li
+        a(href:"/app/" + appname + "/edit",class:"button bluegrad r5", title: "edit app properties") edit
+  section(class:"app-listing r10")
+    hgroup
+      ul(class:"properties")
+        li ID: #{app.pid}
+        li Port: #{app.port}
+    div.git
+      p(class:"button bluegrad r5", title:"copy to clipboard") git
+      input(type:"text", value: app.gitrepo, readonly:"readonly")

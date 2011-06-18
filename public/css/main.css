@@ -118,8 +118,9 @@ a {
 }
 
 .button.bluegrad {
-	color: #ddd;
-	border: solid 1px #08d;;
+	color: #fff;
+	border: solid 1px #08d;
+	text-shadow:1px 1px 0px #000;
 }
 
 .button.bluegrad:hover {
@@ -547,4 +548,14 @@ p#incomplete {
 
 #loader {
   display:none;
+}
+
+.form label {
+  width:150px;
+  display:inline-block;
+}
+
+.form input.text {
+  width:200px;
+  font-size:14px;
 }
