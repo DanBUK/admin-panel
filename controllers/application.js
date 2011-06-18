@@ -9,6 +9,7 @@
  */
 function checkAuth(req,res,next) {
   req.is_logged = false;
+  req.user = {};
   
   if (req.session && req.session.cred) {
     // get from session
@@ -16,7 +17,12 @@ function checkAuth(req,res,next) {
     req.user = req.session.cred;
     req.is_logged = true;
   }
-
+  
+  // req.is_logged = true;
+  // req.user = {
+  //     creds: "user:pass",
+  //     user: "user"
+  // }
   
   // Default Vars
   // NOTE: Do not Override res.vars by initializing it as a new object

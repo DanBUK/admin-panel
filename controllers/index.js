@@ -27,8 +27,14 @@ module.exports = {
 	    , {}
 	    , req.user.creds
 	    , function(response) {
-	  	    res.vars.applist = JSON.parse(response);
-    		  res.render("home");
+	        // If Login Failed
+	        if(response.status === "failure") {
+	          req.session.destroy();
+            res.redirect("/login?action=err");
+            return false;
+          }
+  	      res.vars.applist = repsonse;
+  		    res.render("home");
     });
   },
   
