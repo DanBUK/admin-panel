@@ -2,7 +2,7 @@ module.exports = {
   // Before Filters to be run
   before_filter: [
       [application.middleware.checkAuth]
-    , [application.middleware.redirectAuth]
+    , [application.middleware.redirectFailedAuth]
     , [application.middleware.getLanguage]
   ],
   

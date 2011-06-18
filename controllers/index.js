@@ -14,7 +14,7 @@ module.exports = {
   // Before Filters to be run
   before_filter: [
       [application.middleware.checkAuth]
-    , [application.middleware.redirectAuth, {only: "home"}]
+    , [application.middleware.redirectFailedAuth, {only: "home"}]
     , [application.middleware.getLanguage]
     , [getGravatar]
   ],

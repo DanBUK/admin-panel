@@ -55,5 +55,5 @@ function getLanguage(req,res,next) {
 }
 
 application.middleware.checkAuth = checkAuth;
-application.middleware.redirectAuth = redirectIfNotLoggedIn;
+application.middleware.redirectFailedAuth = redirectIfNotLoggedIn;
 application.middleware.getLanguage = getLanguage;
