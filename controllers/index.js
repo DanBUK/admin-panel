@@ -33,7 +33,7 @@ module.exports = {
             res.redirect("/login?action=err");
             return false;
           }
-  	      res.vars.applist = repsonse;
+  	      res.vars.applist = response;
   		    res.render("home");
     });
   },
