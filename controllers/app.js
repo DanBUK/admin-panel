@@ -14,12 +14,7 @@ module.exports = {
       , req.user.creds
       , function(response) {
     	  	res.vars.app = JSON.parse(response);
-    		  res.render("app/show", {
-      			is_logged: req.is_logged,
-      			user: req.user.user,
-      			action : req.query.action,
-      			route: "app/show"
-      		});
+    		  res.render("app/show");
         });
   }, 
   
@@ -29,20 +24,14 @@ module.exports = {
 		application.lib.request(req.method, "app/"+appname, params, req.user.creds, function(response) {
 	  		res.vars.app = JSON.parse(response);
 			console.log("app: ", res.vars.app);
-			res.render("app/edit", {
-				is_logged: req.is_logged,
-				user: req.user.user,
-				action : req.query.action,
-				route: "app/edit"
-			});
+			res.render("app/edit");
 		});
   },
   
   
   new: function(req,res,next) {
 		res.render("app/new", {
-			layout: false, 
-			route: "app/new"
+			layout: false
 		});
   }, 
   
@@ -51,11 +40,10 @@ module.exports = {
 	if(req.is_logged) {
 		application.lib.request(req.method, "app", params, req.user.creds, function(response) {
 	  	res.vars.app = JSON.parse(response);
-		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
-		res.render("app/create", {
-			layout: false, 
-			route: "app/create"
-		});
+		  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
+  		res.render("app/create", {
+  			layout: false
+  		});
 	  });
 	} else {
 		res.redirect("/login") ;

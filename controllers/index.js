@@ -28,9 +28,7 @@ module.exports = {
 	    , req.user.creds
 	    , function(response) {
 	  	    res.vars.applist = JSON.parse(response);
-    		  res.render("home", {
-    		    route: "home"
-    		});
+    		  res.render("home");
     });
   },
   
@@ -44,11 +42,7 @@ module.exports = {
     
     // Show Login Form
     if(req.method === "GET") {
-      res.render("login", {
-          is_logged: req.is_logged
-        , action : req.query.action
-  	    , route: "login"
-      });
+      res.render("login");
     } else if(req.method === "POST") { // On Login
       // Validate Input Fields
       if(!req.body.user 

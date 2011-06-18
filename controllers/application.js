@@ -8,21 +8,19 @@
  * Checks whether User is logged in
  */
 function checkAuth(req,res,next) {
-  // req.is_logged = false;
-  // 
-  // if (req.session && req.session.cred) {
-  //   // get from session
-  //   console.log('user logged in');
-  //   req.user = req.session.cred;
-  //   req.is_logged = true;
-  // }
-
-  req.is_logged = true;
-  req.user = {
-      creds: "rowoot:hackerro",
-      user: "rowoot"
-  }
+  req.is_logged = false;
   
+  if (req.session && req.session.cred) {
+    // get from session
+    console.log('user logged in');
+    req.user = req.session.cred;
+    req.is_logged = true;
+  }
+
+  
+  // Default Vars
+  // NOTE: Do not Override res.vars by initializing it as a new object
+  // Usage res.vars.foo = "bar"
   res.vars = {
       is_logged: req.is_logged
     , user: req.user.user
