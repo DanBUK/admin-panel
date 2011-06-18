@@ -1,3 +1,5 @@
+var nodester_api_prefix = "app";
+
 module.exports = {
   // Before Filters to be run
   before_filter: [
@@ -9,25 +11,27 @@ module.exports = {
   show: function(req,res,next) {
     var appname = res.vars.appname = req.route.params["id"];
     application.lib.request(req.method
-      , "app/" + appname
+      , nodester_api_prefix + "/" + appname
       , {}
       , req.user.creds
       , function(response) {
     	  	res.vars.app = response;
     		  res.render("app/show");
-        });
+        }
+    );
   }, 
   
   edit: function(req,res,next) {
 		var appname = res.vars.appname = req.route.params["id"];
 		application.lib.request(req.method
-		  , "app/" + appname
+		  , nodester_api_prefix + "/" + appname
 		  , {}
 		  , req.user.creds
 		  , function(response) {
-	  		res.vars.app = response;
-			  res.render("app/edit");
-		});
+	  		  res.vars.app = response;
+  			  res.render("app/edit");
+			  }
+		);
   },
   
   
@@ -37,19 +41,19 @@ module.exports = {
 		});
   }, 
   
+  
   create: function(req,res,next) {
-  // var params = req.route.params;
-  // if(req.is_logged) {
-  //  application.lib.request(req.method, "app", params, req.user.creds, function(response) {
-  //    res.vars.app = JSON.parse(response);
-  //    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
-  //      res.render("app/create", {
-  //        layout: false
-  //      });
-  //   });
-  // } else {
-  //  res.redirect("/login") ;
-  // }
+    application.lib.request(req.method
+      , nodester_api_prefix
+      , req.body
+      , req.user.creds
+      , function(response) {
+          res.vars.app = response;
+          res.render("app/create", {
+           layout: false
+          });
+        }
+    );
   },
   
   update: function(req,res,next) {

@@ -1,3 +1,5 @@
+var nodester_api_prefix = "appdomains";
+
 module.exports = {
   // Before Filters to be run
   before_filter: [
@@ -8,7 +10,7 @@ module.exports = {
   
   index: function(req,res,next) {
 	  application.lib.request(req.method
-	    , "appdomains"
+	    , nodester_api_prefix
 	    , params
 	    , req.user.creds
 	    , function(response) {
@@ -16,7 +18,6 @@ module.exports = {
   		    res.render("app");
 	  });
   }, 
-  
   
   create: function(req,res,next) {
   }, 
