@@ -1,6 +1,6 @@
-adminmod.routes.root("indexs#home");
-adminmod.routes.match("/login","indexs#login", {via:"get,post"});
-adminmod.routes.match("/logout","indexs#logout");
+application.routes.root("index#home");
+application.routes.match("/login","index#login", {via:"get,post"});
+application.routes.match("/logout","index#logout");
 
 // resources generates the following
 // resourceful routes i.e
@@ -11,17 +11,16 @@ adminmod.routes.match("/logout","indexs#logout");
 // POST /app -> apps#create
 // PUT /app/:id -> apps#update
 // DEL /app/:id -> apps#delete
-adminmod.routes.resources("app");
+application.routes.resources("app");
 
 // adminmod.routes.match("/app/new","apps#new");
 // adminmod.routes.match("/app/create","apps#create");
 // adminmod.routes.match("/app/update","apps#update");
 // adminmod.routes.match("/app/delete","apps#delete");
 // adminmod.routes.match("/app/*","apps#index");
-adminmod.routes.match("/appdomains","appdomains#index");
-adminmod.routes.match("/appdomain/create","appdomains#create");
-adminmod.routes.match("/appdomain/delete","appdomains#delete");
+application.routes.resources("appdomain");
+
 //adminmod.routes.match("/module/install/*","modules#install");
 //adminmod.routes.match("/module/update/*","moduless#update");
 //adminmod.routes.match("/module/uninstall/*","moduless#uninstall");
-adminmod.routes.match("/user","users#index");
+application.routes.match("/user","users#index");

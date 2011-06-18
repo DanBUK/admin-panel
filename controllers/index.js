@@ -1,7 +1,7 @@
 function getGravatar(req,res,next) {
   /*if(req.user.email != undefined){
   	// when this becomes dynamic first convert the email string to lower case .toLowerCase()
-  	var email_hash = adminmod.lib.md5( req.user.email );
+  	var email_hash = application.lib.md5( req.user.email );
   	res.vars.gravatar = "http://www.gravatar.com/avatar/"+email_hash;
   } else {*/
 	// revert to a default image
@@ -13,34 +13,25 @@ function getGravatar(req,res,next) {
 module.exports = {
   // Before Filters to be run
   before_filter: [
-    [adminmod.middleware.checkAuth],
-    [adminmod.middleware.getLanguage],
-    [getGravatar]
+      [application.middleware.checkAuth]
+    , [application.middleware.redirectAuth, {only: "home"}]
+    , [application.middleware.getLanguage]
+    , [getGravatar]
   ],
   
   home: function(req,res,next) {
-    if(req.is_logged) {
-      console.log("logged as ", req.user);
-  	  var params = "";
-  		// based on verb, get params
-  		if(req.method == "GET") {
-  		  params = req.query;
-  		} else {
-  		  params = req.body;
-  		}
-    
-  	  adminmod.lib.request(req.method, "apps", params, req.user.creds, function(response) {
-  	  	res.vars.applist = JSON.parse(response);
-  		  res.render("home", {
-    			is_logged: req.is_logged,
-    			user: req.user.user,
-    			action : req.query.action,
-    			route: "home"
+    console.log("logged as ", req.user);
+		// Request Nodester for Apps List
+	  application.lib.request(req.method
+	    , "apps"
+	    , {}
+	    , req.user.creds
+	    , function(response) {
+	  	    res.vars.applist = JSON.parse(response);
+    		  res.render("home", {
+    		    route: "home"
     		});
-      });  
-    } else {
-      res.redirect("/login");
-    }
+    });
   },
   
   login: function(req,res,next) {
@@ -54,22 +45,23 @@ module.exports = {
     // Show Login Form
     if(req.method === "GET") {
       res.render("login", {
-        is_logged: req.is_logged,
-        action : req.query.action,
-  	    route: "login"
+          is_logged: req.is_logged
+        , action : req.query.action
+  	    , route: "login"
       });
     } else if(req.method === "POST") { // On Login
-      console.log('logging him in');
-      // Redirect if no user | pass is input
-      if(!req.body.user || req.body.user.user === "" && req.body.user.pass === "") {
+      // Validate Input Fields
+      if(!req.body.user 
+        || req.body.user.user === "" 
+        && req.body.user.pass === "") {
         res.redirect("/login?action=incomplete");
         return;
         next();
       }
-      // Set Session
+      // Set Session so he can be authorized and logged in
       req.session.cred = {
-        creds: req.body.user.user + ":" + req.body.user.pass,
-        user:req.body.user.user
+          creds: req.body.user.user + ":" + req.body.user.pass
+        , user:req.body.user.user
       }
       // Redirect to index
       res.redirect("/");
@@ -83,7 +75,7 @@ module.exports = {
       res.redirect("/"); 
       return false; 
     }
-    req.session.destroy( ); // destroy cookie session created
+    req.session.destroy(); // destroy cookie session created
     res.redirect("/login"); // redirect to home after delete
   }
     

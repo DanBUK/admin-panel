@@ -1,15 +1,15 @@
 module.exports = {
   // Before Filters to be run
   before_filter: [
-    [adminmod.middleware.checkAuth],
-    [adminmod.middleware.getLanguage]
+    [application.middleware.checkAuth],
+    [application.middleware.getLanguage]
   ],
   
   install: function(req,res,next) {
 	var params = "";
 	if(req.is_logged) {
       var appname = res.vars.appname = req.route.params[0];
-	  adminmod.lib.request(req.method, "npm", params, req.user.creds, function(response) {
+	  application.lib.request(req.method, "npm", params, req.user.creds, function(response) {
 	  	res.vars.app = JSON.parse(response);
 		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
 		res.render("app", {
@@ -28,7 +28,7 @@ module.exports = {
 	var params = "";
 	if(req.is_logged) {
       var appname = res.vars.appname = req.route.params[0];
-	  adminmod.lib.request(req.method, "npm", params, req.user.creds, function(response) {
+	  application.lib.request(req.method, "npm", params, req.user.creds, function(response) {
 	  	res.vars.app = JSON.parse(response);
 		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
 		res.render("app", {
@@ -47,7 +47,7 @@ module.exports = {
 	var params = "";
 	if(req.is_logged) {
       var appname = res.vars.appname = req.route.params[0];
-	  adminmod.lib.request(req.method, "npm", params, req.user.creds, function(response) {
+	  application.lib.request(req.method, "npm", params, req.user.creds, function(response) {
 	  	res.vars.app = JSON.parse(response);
 		console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", res.vars.app);
 		res.render("app", {

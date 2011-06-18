@@ -1,16 +1,8 @@
-
-function getLanguage(req,res,next) {
-  res.vars = {
-    text: adminmod.lib.getLanguage("en")
-  }
-  next();
-}
-
 module.exports = {
   // Before Filters to be run
   before_filter: [
-    [adminmod.middleware.checkAuth],
-    [getLanguage]
+    [application.middleware.checkAuth],
+    [application.middleware.getLanguage]
   ],
   
   index: function(req,res,next) {
