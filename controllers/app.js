@@ -50,7 +50,9 @@ module.exports = {
 		  res.vars.app = response;
 		  // fix as appname is not returned from the request
           res.vars.app.name = appname;
-          res.render("app/create", {
+          // available in views: 
+		  // app.name, app.status, app.port, app.gitrepo, app.start, app.running, app.pid
+		  res.render("app/create", {
            layout: false
           });
         }
@@ -63,6 +65,17 @@ module.exports = {
   
   'delete': function(req,res,next) {
 	  // res.render();
+	  application.lib.request(req.method
+	  , nodester_api_prefix
+      , req.body
+      , req.user.creds
+      , function(response) {
+		  res.vars.app = response;
+		   res.render("app/delete", {
+           layout: false
+          });
+        }
+    );
   }
   
 }

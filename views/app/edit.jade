@@ -3,7 +3,7 @@
 		h2 Edit 
 			a(href:'/apps/'+appname) #{appname}
 	
-	form#app-edit(action:"app/update")
+	form#app-edit(action:"apps/update")
 		label(for:"appname") Application: 
 		input(name:"appname", readonly: "readonly", value: appname)
 		
@@ -13,5 +13,5 @@
 		fieldset#modules
 			!= partial('app/modules', {})
 	
-	form#app-delete(action:"app/delete")
+	form#app-delete(action:"apps/delete", method:'DEL', class: 'modal')
 		input(type:"submit", class:"button redgrad r5", value: "Delete App")
