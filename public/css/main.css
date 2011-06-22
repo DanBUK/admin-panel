@@ -143,8 +143,11 @@ header {
 	background: #000;
 }
 
-h1#logo { 
+#logo { 
 	float: left;
+}
+#logo a { 
+	display: block;
 	width: 325px;
 	height: 100px;
 	margin-left: 24px;
@@ -272,6 +275,12 @@ hgroup h3 a:hover {
 #home #content #log {
 	float: right;
 	width: 19%;
+}
+
+
+.page#app #appdomain {
+	float: left;
+	padding: 16px;
 }
 
 

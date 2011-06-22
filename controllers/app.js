@@ -8,7 +8,7 @@ module.exports = {
     , [application.middleware.getLanguage]
   ],
   
-  show: function(req,res,next) {
+  'show': function(req,res,next) {
     var appname = res.vars.appname = req.route.params["id"];
     application.lib.request(req.method
       , nodester_api_prefix + "/" + appname
@@ -21,28 +21,27 @@ module.exports = {
     );
   }, 
   
-  edit: function(req,res,next) {
-		var appname = res.vars.appname = req.route.params["id"];
-		application.lib.request(req.method
-		  , nodester_api_prefix + "/" + appname
-		  , {}
-		  , req.user.creds
-		  , function(response) {
-	  		  res.vars.app = response;
-  			  res.render("app/edit");
-			  }
-		);
+ 'edit': function(req,res,next) {
+	  console.log("EEEEDDDDIIITTT");
+	var appname = res.vars.appname = req.route.params["id"];
+	application.lib.request(req.method
+	  , nodester_api_prefix + "/" + appname
+	  , {}
+	  , req.user.creds
+	  , function(response) {
+		  res.vars.app = response;
+		  res.render("app/edit");
+		  }
+	);
   },
   
-  
-  new: function(req,res,next) {
+  'new': function(req,res,next) {
 		res.render("app/new", {
 			layout: false
 		});
   }, 
   
-  
-  create: function(req,res,next) {
+  'create': function(req,res,next) {
     application.lib.request(req.method
       , nodester_api_prefix
       , req.body
@@ -56,11 +55,11 @@ module.exports = {
     );
   },
   
-  update: function(req,res,next) {
+  'update': function(req,res,next) {
 	  // res.render();
   },
   
-  destroy: function(req,res,next) {
+  'delete': function(req,res,next) {
 	  // res.render();
   }
   

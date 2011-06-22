@@ -1,6 +1,7 @@
 .page#app
 	div.headline
-		h2 Edit #{appname}
+		h2 Edit 
+			a(href:'/apps/'+appname) #{appname}
 	
 	form#app-edit(action:"app/update")
 		label(for:"appname") Application: 
