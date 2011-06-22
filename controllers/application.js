@@ -42,8 +42,10 @@ function checkAuth(req,res,next) {
 function redirectIfNotLoggedIn(req,res,next) {
   if (!req.is_logged) {
     res.redirect("/login");
+    return;
+  } else {
+    next();
   }
-  next();
 }
  
 /**
