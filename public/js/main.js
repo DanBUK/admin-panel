@@ -345,9 +345,8 @@ function ajaxFormSubmit(name){
    		url: form['action'],
    		data: $(form).serialize(),
 	   success: function(msg){
-		   console.log(msg);
-	
-		 alert( "Data Saved: " + msg );
+		   // Display the returned message
+		   $(form).parent().html(msg);
 	   }
  	});
 	//modal_content
