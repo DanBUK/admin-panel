@@ -1,0 +1,9 @@
+- var username = "username";
+
+.page#user
+  div.headline
+    h2 About #{username}
+    ul.actions
+      li
+        a(href:"/users/"+ username +"/edit",class:"button bluegrad r5", title: "edit app properties") edit
+  ...

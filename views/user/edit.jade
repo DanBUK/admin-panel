@@ -1,0 +1,7 @@
+.page#user
+	div.headline
+		h2 Edit username
+	
+	form#user-edit(action:"users/update")
+		label(for:"username") Username: 
+		input(name:"username", readonly: "readonly", value: "username")
