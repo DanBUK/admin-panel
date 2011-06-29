@@ -1,9 +1,9 @@
-- var username = "username";
-
 .page#user
-  div.headline
-    h2 About #{username}
-    ul.actions
-      li
-        a(href:"/users/"+ username +"/edit",class:"button bluegrad r5", title: "edit app properties") edit
-  ...
+	div.headline
+		img.gravatar(src: gravatar)
+		h2 #{username}
+		ul.actions
+			li
+				a(href:"/users/"+ username +"/edit",class:"button bluegrad r5", title: "edit app properties") edit
+
+	p User info will be added here...

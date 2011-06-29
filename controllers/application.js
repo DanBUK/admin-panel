@@ -56,6 +56,15 @@ function getLanguage(req,res,next) {
   next();
 }
 
+/**
+ * Gets Gravatar
+ */
+function getGravatar(req,res,next) {
+  res.vars.gravatar = application.lib.getGravatar("user@nodester.com");
+  next();
+}
+
 application.middleware.checkAuth = checkAuth;
 application.middleware.redirectFailedAuth = redirectIfNotLoggedIn;
 application.middleware.getLanguage = getLanguage;
+application.middleware.getGravatar = getGravatar;

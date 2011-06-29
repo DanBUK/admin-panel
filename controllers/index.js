@@ -1,14 +1,3 @@
-function getGravatar(req,res,next) {
-  /*if(req.user.email != undefined){
-  	// when this becomes dynamic first convert the email string to lower case .toLowerCase()
-  	var email_hash = application.lib.md5( req.user.email );
-  	res.vars.gravatar = "http://www.gravatar.com/avatar/"+email_hash;
-  } else {*/
-	// revert to a default image
-  	res.vars.gravatar = "/static/img/gravatar-48.png";
-  //}
-  next();
-}
 
 module.exports = {
   // Before Filters to be run
@@ -16,7 +5,7 @@ module.exports = {
       [application.middleware.checkAuth]
     , [application.middleware.redirectFailedAuth, {only: "home"}]
     , [application.middleware.getLanguage]
-    , [getGravatar]
+    , [application.middleware.getGravatar]
   ],
   
   home: function(req,res,next) {
