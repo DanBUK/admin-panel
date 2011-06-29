@@ -165,20 +165,29 @@ Array.prototype.clean = function(deleteValue) {
 	      href = $this.attr("href"),
 	      thisHtml = $this.html(),
 	      thisCss = $this.attr("class"),
-	      data = JSON.parse($this.attr("data-params"));
+	      data = JSON.parse($this.attr("data-params")), 
+		  $modal = $("#modal");
+		  
 	  // remove put from rel --- temporary
     $this.removeAttr("rel").removeAttr("class");
     $this.html(Helper.inlineLoader($this)); //loader 
 	  $.ajax({
-	    url:"/api" + href,
+	    url: href,
 	    type:"DELETE",
 	    data:data,
 	    success:function(r) {
-	      if(r.status && r.status == "success") {
-	        window.location = "/apps";
-	      } else {
+	      //if(r.status && r.status == "success") {
+	      //  window.location = "/apps";
+	      //} else {
 	        // error
-	      }
+	      //}
+		  $modal.modal(
+            {content: r, 
+              onOpen: function() {
+               
+              } // onopen
+    	    }); //end modal
+			
 	    },
       complete:function() {
 	      $this.attr("rel", "put").attr("class",thisCss);
