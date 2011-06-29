@@ -20,6 +20,11 @@ module.exports = {
     res.render("show");
     //    }
     // );
+  },
+  
+  'edit': function(req,res,next) {
+	var username = res.vars.username =  req.user.user || "";
+    res.render("edit");
   }
       
 }

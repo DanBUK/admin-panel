@@ -19,5 +19,6 @@ application.routes.resources("appdomain");
 //adminmod.routes.match("/module/update/*","moduless#update");
 //adminmod.routes.match("/module/uninstall/*","moduless#uninstall");
 
-// GET /users/:id -> users.show
+// GET /users/:id -> user.show
+// GET /users/:id/edit ->  user.edit
 application.routes.resources("user");
