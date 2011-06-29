@@ -95,7 +95,14 @@ a {
 }
 
 .redgrad {
-  background:firebrick;
+  background-color: #cc3333;
+  background-image: -moz-linear-gradient(top, #cc3333, #660000); /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #cc3333, #660000); /* IE10 */
+  background-image: -o-linear-gradient(top, #cc3333, #660000); /* Opera 11.10+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#cc3333), to(#660000)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #cc3333, #660000); /* Chrome 10+, Saf5.1+ */
+  background-image: linear-gradient(top, #cc3333, #660000);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cc3333', EndColorStr='#660000'); /* IE6–IE9 */
 }
 
 
@@ -118,12 +125,22 @@ a {
 }
 
 .button.bluegrad {
-	color: #fff;
+	color: #eee;
 	border: solid 1px #08d;
 	text-shadow:1px 1px 0px #000;
 }
 
 .button.bluegrad:hover {
+	color: #fff;
+}
+
+.button.redgrad {
+	color: #fee;
+	border: solid 1px #d80;
+	text-shadow:1px 1px 0px #000;
+}
+
+.button.redgrad:hover {
 	color: #fff;
 }
 

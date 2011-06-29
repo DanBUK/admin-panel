@@ -8,9 +8,9 @@
     h2 About #{appname}
     ul.actions
       li
-        a(href:"/apps"+ appname +"/"+ appAction,"data-params":appParams,rel:"put",class:"button yellowgrad r5", title:  appAction+" the app") #{appAction}
+        a(href:"/apps/"+ appname,"data-params":appParams,rel:"put",class:"button yellowgrad r5", title:  appAction+" the app") #{appAction}
       li
-        a(href:"/apps"+ appname +"/restart","data-params":"appname=" + appname + "&running=restart",rel:"put",class:"button yellowgrad r5", title: "restart the app") restart
+        a(href:"/apps/"+ appname,"data-params":"appname=" + appname + "&running=restart",rel:"put",class:"button yellowgrad r5", title: "restart the app") restart
       li
         a(href:"/apps/"+ appname +"/edit",class:"button bluegrad r5", title: "edit app properties") edit
   section(class:"app-listing r10")

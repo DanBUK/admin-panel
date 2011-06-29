@@ -60,22 +60,33 @@ module.exports = {
   },
   
   'update': function(req,res,next) {
-	  // res.render();
-  },
-  
-  'delete': function(req,res,next) {
-	  // res.render();
+	  console.log("______________________________________________", req.body);
 	  application.lib.request(req.method
 	  , nodester_api_prefix
-      , req.body
-      , req.user.creds
-      , function(response) {
+	  , req.body
+	  , req.user.creds
+	  , function(response) {
 		  res.vars.app = response;
+		  res.render("app/update", {
+           layout: false
+          });
+		}
+	);
+  },
+    
+  'delete': function(req,res,next) {
+	  // res.render();
+	  //application.lib.request(req.method
+	  //, nodester_api_prefix
+      //, req.body
+      //, req.user.creds
+      //, function(response) {
+		  //res.vars.app = response;
 		   res.render("app/delete", {
            layout: false
           });
-        }
-    );
+       // }
+    //);
   }
   
 }

@@ -85,17 +85,27 @@ Array.prototype.clean = function(deleteValue) {
 	  var $this = $(this),
 	      href = $this.attr("href"),
 	      actionText = $this.text(),
-	      $allRels = $("a[rel='put']");
+	      $allRels = $("a[rel='put']"), 
+		  $modal = $("#modal");
 	      
 	  // remove put from rel --- temporary
 	  $allRels.removeAttr("rel");
 	  $this.html(Helper.inlineLoader($this));
 	  // send ajax request
+	  
 	  $.ajax({
-	    url:"/api" + href,
+	    url: href,
 	    type:"PUT",
-	    data:$this.attr("data-params"),
-	    success:function(r) {
+	    data: $this.attr("data-params"),
+	    success:function( response ) {
+		  $modal.modal(
+            {content: response, 
+              onOpen: function() {
+               
+              } // onopen
+    	    }); //end modal
+			
+			/*
 	      if(r.status == "success") {
 	        // if restart was clicked
 	        if(actionText == "restart") return;
@@ -131,12 +141,12 @@ Array.prototype.clean = function(deleteValue) {
   	      }
         } else {
           // error
-        }
+        }*/
 	    },
 	    // on ajax complete, instill put agin
 	    complete:function() {
-	      $allRels.attr("rel", "put");
-	      $this.html(actionText);
+	      //$allRels.attr("rel", "put");
+	      //$this.html(actionText);
 	    }
 	  })
 	  return false;
@@ -333,7 +343,7 @@ Array.prototype.clean = function(deleteValue) {
      * @lends Helper#
      */
     inlineLoader: function($dom) {
-      return "<span style='width:" + $dom.width()+ "px; display:inline-block'><img src='/static/i/loader-small.gif' /></span>"
+      return "<span style='width:" + $dom.width()+ "px; display:inline-block'><img src='/static/img/loader-small.gif' /></span>"
     }
   }
 })(jQuery);

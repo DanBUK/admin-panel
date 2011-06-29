@@ -10,8 +10,10 @@
 		label(for:"adddomain") Domain: 
 		input(name:"appdomain", value: "")
 		
+		label(for:"start") Server: 
+		input(name:"start", value: app.start)
+		
 		fieldset#modules
 			!= partial('app/modules', {})
 	
-	form#app-delete(action:"apps/delete", method:'DEL', class: 'modal')
-		input(type:"submit", class:"button redgrad r5", value: "Delete App")
+	a(href="/apps/"+appname+"/delete",rel="modal",class="app-delete button redgrad r5") Delete App
