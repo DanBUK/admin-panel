@@ -14,7 +14,7 @@ module.exports = {
 	    , params
 	    , req.user.creds
 	    , function(response) {
-	    	  res.vars.appdomains = response;
+	    	res.vars.appdomains = response;
   		    res.render("app");
 	  });
   }, 

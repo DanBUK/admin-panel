@@ -145,8 +145,8 @@ Array.prototype.clean = function(deleteValue) {
 	    },
 	    // on ajax complete, instill put agin
 	    complete:function() {
-	      //$allRels.attr("rel", "put");
-	      //$this.html(actionText);
+	      $allRels.attr("rel", "put");
+	      $this.html(actionText);
 	    }
 	  })
 	  return false;
