@@ -15,7 +15,9 @@
         a(href:"/apps/"+ appname +"/edit",class:"button bluegrad r5", title: "edit app properties") edit
   section(class:"app-listing r10")
     h4#appdomain url: 
-      a(href:'http://'+appdomain, target:'_blank', title:'Go to the app') #{appdomain}
+      a(href:'http://'+appdomain, target:'_blank', title:'Go to the app') #{appdomain} 
+    h4#appdomain server: #{app.start}
+    
     hgroup
       ul(class:"properties")
         li ID: #{app.pid}
