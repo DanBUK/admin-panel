@@ -1,0 +1,3 @@
+[submodule "node_modules/lokki"]
+	path = node_modules/lokki
+	url = git@github.com:rowoot/lokki.git

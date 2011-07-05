@@ -19,9 +19,9 @@ Running
 -------
 A working demo: [http://admin.nodester.com](http://admin.nodester.com)
 
-Questions?
-----------
-If you have any questions, please feel free to ask at micheal[at]visionmasterdesigns.com or tweet to [@MichealBenedict](http://twitter.com/michealbenedict)
+By
+--
+@Tracend and @MichealBenedict
 
 Special Thanks
 --------------
